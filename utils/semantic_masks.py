@@ -13,13 +13,13 @@ from alive_progress import alive_bar
 }'''
 
 # binary
-class_color_mapping = {
+'''class_color_mapping = {
     0: (0, 0, 0),           # Background - BLACK
     1: (0, 130, 200),       # Instruments
-}
+}'''
 
-
-def class2color(mask):
+# da modificare
+def class2color(mask, class_color_mapping):
     """
     Function which generates a colored mask based on the input class value mask
     :param mask:Aa mask where each class has its own integer value
@@ -37,7 +37,7 @@ def class2color(mask):
     return color_mask
 
 
-def color2class(color_mask):
+def color2class(color_mask, class_color_mapping):
     """
     Function which generates a class value mask based on the input colored mask
     :param color_mask: A mask where each class has its own color
@@ -45,12 +45,21 @@ def color2class(color_mask):
     """
 
     # Initialize a blank image
-    mask = np.zeros([color_mask.shape[0], color_mask.shape[1]], dtype=np.uint8)
+    width, height = color_mask.shape[:-1]
+    mask = np.zeros([width, height], dtype=np.uint8)
 
-    # Iterate over the possible class values, as defined in class_color_mapping
-    for i in class_color_mapping:
-        # Assign the class value corresponding to the color to the appropriate pixels in the blank image
-        mask[np.where(np.all(color_mask == class_color_mapping[i], axis=2))] = i
+    # Iterate over the pixels of the image
+    for y in range(height):
+        for x in range(width):
+            # Assign the class value corresponding to the color to the appropriate pixels in the blank image
+            key = str(tuple(color_mask[x, y]))
+            if key in class_color_mapping.keys():
+                mask[x, y] = class_color_mapping[key]
+            else:
+                mask[x, y] = 0
+
+    #for i in range(36):
+    #    print(i, np.count_nonzero(mask==i))
 
     return mask
 
