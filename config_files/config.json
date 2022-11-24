@@ -1,6 +1,10 @@
 {
     "classes": 32,
     "labels": {
+        "Background": {
+            "label": 0,
+            "color": "#000000"
+        },
         "Assistant trocar": {
             "label": 37,
             "color": "#e9b6ca"
