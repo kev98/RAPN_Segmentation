@@ -4,7 +4,7 @@ import cv2
 import glob
 from alive_progress import alive_bar
 import json
-from utils.semantic_masks import color2class
+from semantic_masks import color2class
 
 def create_dataset_tree(source, dest):
 
@@ -123,6 +123,7 @@ def main():
             
             # crop the image and the mask and save them
             if not remove_image:
+                print(im_path)
                 im_cropped, mask_cropped = crop(im, mask, removing_color)
                 procedure = im_path.split('/')[-2]
                 im_path = dest_folder + '/raw_images/' + procedure + '/' + os.path.basename(im_path)

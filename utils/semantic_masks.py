@@ -53,8 +53,11 @@ def color2class(color_mask, class_color_mapping):
         for x in range(width):
             # Assign the class value corresponding to the color to the appropriate pixels in the blank image
             key = str(tuple(color_mask[x, y]))
+            key_reverse = str(tuple(np.flip(color_mask[x, y])))
             if key in class_color_mapping.keys():
                 mask[x, y] = class_color_mapping[key]
+            elif key_reverse in class_color_mapping.keys():
+                mask[x, y] = class_color_mapping[key_reverse]
             else:
                 mask[x, y] = 0
 
