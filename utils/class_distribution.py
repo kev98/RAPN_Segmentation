@@ -39,6 +39,7 @@ def main():
     with alive_bar(len(masks)) as bar:
         for mask_path in masks:
             # open the mask and retrieve the size
+            print(mask_path)
             mask = cv2.cvtColor(cv2.imread(mask_path), cv2.COLOR_BGR2RGB)
             width, height = mask.shape[:-1]
             flat = mask.reshape(width*height, 3)
@@ -78,7 +79,7 @@ def main():
     df = pd.DataFrame(count_classes, index=classes_list, columns=['Occurencies'])
     print(df)
 
-    df.to_excel(source_folder + 'class_distribution.xlsx')
+    df.to_excel(source_folder + '/class_distribution.xlsx')
 
 
 if __name__ == '__main__':

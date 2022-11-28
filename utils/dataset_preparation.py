@@ -47,7 +47,7 @@ def crop(img, mask, removing_color):
         count = 0
         for y in range(height):
             for x in range(width):
-                r, g, b = mask_crop[x, y]
+                b, g, r = mask_crop[x, y]
                 color = f"#{b:02x}{g:02x}{r:02x}"
                 if color in removing_color:
                     count += 1
@@ -115,7 +115,7 @@ def main():
             removing_color.append('#000000')
             for y in range(height):
                 for x in range(width):
-                    r, g, b = mask[x, y]
+                    b, g, r = mask[x, y]
                     color = f"#{b:02x}{g:02x}{r:02x}"
                     if color not in removing_color:
                         remove_image = False
