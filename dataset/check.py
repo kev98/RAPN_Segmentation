@@ -36,15 +36,14 @@ def main():
     #source_folder = "/Volumes/ORSI/Kevin/Dataset_RAPN_20procedures/train/masks"
     masks = glob.glob(source_folder + '/*/*.png')
     dir = ['RAPN38', 'RAPN7', 'RAPN104', 'RAPN12', 'RAPN115', 'RAPN39', 'RAPN34']
-    #dir = ['RAPN7', 'RAPN10']
     dir.sort()
 
     masks.sort()
 
     # class distribution among the RAPN100 Dataset images, previously computed
-    class_distribution = [30261, 22938, 15239, 12650, 12130, 8035, 7717, 5665, 5109, 4464, 3035, 1874, 1500, 1360, 1093,
-                          1031, 936 ,784, 762, 712, 536, 470, 352, 244, 217, 117, 99, 61, 60, 37, 31, 30, 22, 18, 11, 6,
-                          1, 0, 0, 0]
+    class_distribution = [30261, 1360, 762, 1874, 11, 61, 784, 117, 217, 5665, 18, 15239, 1500, 536, 7717, 352, 99, 936,
+                          470, 30, 12650, 1, 0, 60, 22938, 4464, 0, 6, 12130, 37, 5109, 8035, 712, 3035, 0, 1031, 1093,
+                          22, 244, 31]
     class_distribution = [c/30438 for c in class_distribution]
 
     print(class_distribution)
@@ -69,6 +68,7 @@ def main():
 
     distances = []
     count_classes = [0 for i in range(0, 40)]
+    count = 0
     for d, c in zip(dir, count_list):
         folder_mask = glob.glob(os.path.join(source_folder, d) + '/*.png')
         if len(folder_mask) == 0:
@@ -85,11 +85,13 @@ def main():
             # loop over the image to check the classes present in it
             for c in classes:
                 count_classes[c] += 1
+            count += 1
 
         #print(kstest(count_classes, class_distribution))
+    print(count)
 
     for i in range(len(classes_list)):
-        print(classes_list[i], count_classes[i])
+        print(classes_list[i], count_classes[i]/count)
 
 
 if __name__ == '__main__':
