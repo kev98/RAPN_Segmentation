@@ -8,19 +8,36 @@ from scipy.stats import ks_2samp, kstest
 from scipy.spatial import distance
 import math
 
+def mean( hist ):
+    mean = 0.0
+    for i in hist:
+        mean += i
+    mean/= len(hist)
+    return mean
+
+def bhatta ( hist1,  hist2):
+    # calculate mean of hist1
+    h1_ = mean(hist1)
+
+    # calculate mean of hist2
+    h2_ = mean(hist2)
+
+    # calculate score
+    score = 0
+    for i in range(hist1.shape[0]):
+        score += math.sqrt( hist1[i] * hist2[i] )
+    # print h1_,h2_,score;
+    score = math.sqrt( 1 - ( 1 / math.sqrt(h1_*h2_*8*8) ) * score )
+    return score
 
 def main():
     # Specify the dataset folder
     source_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN/masks"
     #source_folder = "/Volumes/ORSI/Kevin/Dataset_RAPN_20procedures/train/masks"
     masks = glob.glob(source_folder + '/*/*.png')
-    dir = os.listdir(source_folder)
+    dir = ['RAPN38', 'RAPN7', 'RAPN104', 'RAPN12', 'RAPN115', 'RAPN39', 'RAPN34']
+    #dir = ['RAPN7', 'RAPN10']
     dir.sort()
-
-    dir_list = []
-
-    for elem in dir_list:
-        print(elem)
 
     masks.sort()
 
@@ -40,9 +57,19 @@ def main():
         count_list.append(len([i for i in masks if st in i]))
     print(dir, count_list)
 
+    # ordered list of all the classes
+    classes_list =['Background', 'Bulldog clamp', 'Bulldog wire', 'Cadiere Forceps', 'Catheter',
+     'Drain', 'Endobag', 'Endobag specimen retriever', 'Endobag wire', 'Fenestrated Bipolar Forceps', 'Fibrilar',
+     'Force Bipolar', 'Gauze', 'Hemolock Clip Applier', 'Hemolock Clip', 'Inside Body', 'Laparoscopic Clip Applier',
+     'Laparoscopic Fenestrated Forceps', 'Laparoscopic Needle Driver', 'Laparoscopic Scissors', 'Large Needle Driver',
+     'Left PBP Needle Driver', 'Maryland Bipolar Forceps', 'Metal clip', 'Monopolar Curved Scissors',
+     'Prograsp Forceps', 'Right PBP Needle Driver', 'Scissors', 'Suction', 'Surgical_Glove_Tip', 'Suture needle',
+     'Suture wire', 'Veriset', 'Vessel Loop', 'Vessel Sealer Extend', 'Echography', 'Da Vinci trocar',
+     'Assistant trocar', 'Airseal trocar', 'Foam extruder']
+
     distances = []
+    count_classes = [0 for i in range(0, 40)]
     for d, c in zip(dir, count_list):
-        count_classes = [0 for i in range(0, 40)]
         folder_mask = glob.glob(os.path.join(source_folder, d) + '/*.png')
         if len(folder_mask) == 0:
             distances.append(0)
@@ -59,28 +86,10 @@ def main():
             for c in classes:
                 count_classes[c] += 1
 
-        count_classes = [i / len(folder_mask) for i in count_classes]
-        dist = distance.euclidean(count_classes, class_distribution)
-        print(dist)
-        distances.append(dist)
-
         #print(kstest(count_classes, class_distribution))
 
-    # ordered list of all the classes
-    classes_list =['Background', 'Bulldog clamp', 'Bulldog wire', 'Cadiere Forceps', 'Catheter',
-     'Drain', 'Endobag', 'Endobag specimen retriever', 'Endobag wire', 'Fenestrated Bipolar Forceps', 'Fibrilar',
-     'Force Bipolar', 'Gauze', 'Hemolock Clip Applier', 'Hemolock Clip', 'Inside Body', 'Laparoscopic Clip Applier',
-     'Laparoscopic Fenestrated Forceps', 'Laparoscopic Needle Driver', 'Laparoscopic Scissors', 'Large Needle Driver',
-     'Left PBP Needle Driver', 'Maryland Bipolar Forceps', 'Metal clip', 'Monopolar Curved Scissors',
-     'Prograsp Forceps', 'Right PBP Needle Driver', 'Scissors', 'Suction', 'Surgical_Glove_Tip', 'Suture needle',
-     'Suture wire', 'Veriset', 'Vessel Loop', 'Vessel Sealer Extend', 'Echography', 'Da Vinci trocar',
-     'Assistant trocar', 'Airseal trocar', 'Foam extruder']
-
-    # create a Dataframe with the occurencies of each class
-    df = pd.DataFrame(distances, index=dir, columns=['Occurencies'])
-    print(df)
-
-    df.to_excel("/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN/" + 'directory_distance.xlsx')
+    for i in range(len(classes_list)):
+        print(classes_list[i], count_classes[i])
 
 
 if __name__ == '__main__':
