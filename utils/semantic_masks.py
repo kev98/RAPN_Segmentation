@@ -18,7 +18,7 @@ from alive_progress import alive_bar
     1: (0, 130, 200),       # Instruments
 }'''
 
-# da modificare
+# da modificare !!!!!
 def class2color(mask, class_color_mapping):
     """
     Function which generates a colored mask based on the input class value mask
@@ -71,31 +71,5 @@ def color2class(color_mask, class_color_mapping):
 def binary_mask(mask):
 
     return (mask > 0).astype('float')
-
-
-if __name__ == "__main__":
-
-    # Specify the input folder and the output folder
-    source_folder = r"C:\Users\jente\Downloads\RAPN_pixel Sep 29 2022 11_30 Pieter\fuse_images"
-    dest_folder = r"C:\Users\jente\Downloads\RAPN_pixel Sep 29 2022 11_30 Pieter\masks"
-
-    # List up the images and iterate over them
-    images = glob.glob(source_folder + '/*.png')
-    with alive_bar(len(images)) as bar:
-        for im_path in images:
-
-            # Read in the image and convert to RGB
-            im = cv2.cvtColor(cv2.imread(im_path), cv2.COLOR_BGR2RGB)
-
-            # Generate the corresponding class mask (= matrix with value related to class for each pîxel)
-            mask = color2class(im)
-
-            # Save the resulting mask in the destination folder
-            mask_path = dest_folder + '/' + os.path.basename(im_path).replace('___fuse', '___mask')
-            cv2.imwrite(mask_path, mask)
-
-            # Update the progress bar
-            bar()
-
 
 

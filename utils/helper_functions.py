@@ -42,7 +42,8 @@ def computeDiceScore(predictions, targets):
     return dice(torch.tensor(np.array(predictions)), torch.tensor(np.array(targets)))
 
 
-def saveResults(X_test, model, num_classes, platform, encoder, model_name, save_img=False):
+# function to compute metrics and save the masks segmented by the network
+def saveResults(X_test, model, num_classes, platform, encoder, model_name, out_dir, save_img=False):
     ix = 0
     targets = []
     predictions = []
@@ -58,14 +59,12 @@ def saveResults(X_test, model, num_classes, platform, encoder, model_name, save_
         predictions.append(res.numpy())
         end = time.time()
 
+        # list of all inference times
         comp_time.append(end - start)
 
         if save_img:
             mask = class2color(res)
-            if platform == 'server':
-                cv2.imwrite(r"/home/kmarc/workspace/nas_private/binary/TEST" + '/' + encoder + '-' + model_name + '_' + str(ix) + '.png', mask[:, :, ::-1])
-            elif platform == 'local':
-                cv2.imwrite(r"/Users/kevinmarchesini/Desktop/Internship @ Orsi Academy/OutputRAPN/TEST" + '/' + encoder + '-' + model_name + '_' + str(ix) + '.png', mask[:, :, ::-1])
+            cv2.imwrite(out_dir + '/TEST/' + encoder + '-' + model_name + '_' + str(ix) + '.png', mask[:, :, ::-1])
         ix = ix + 1
 
     IoU = computeIoU(predictions, targets, num_classes)
