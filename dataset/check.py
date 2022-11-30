@@ -13,7 +13,7 @@ def main():
     #masks = glob.glob(source_folder + '/*/*.png')
     #dir = ['RAPN38', 'RAPN7', 'RAPN104', 'RAPN12', 'RAPN115', 'RAPN39', 'RAPN34']
     dir = ['RAPN91', 'RAPN20', 'RAPN96', 'RAPN102', 'RAPN47', 'RAPN41', 'RAPN87', 'RAPN92', 'RAPN81', 'RAPN95',
-            'RAPN28', 'RAPN19']
+            'RAPN28', 'RAPN19', 'RAPN50', 'RAPN89', 'RAPN48']
     len_dir = {'RAPN91': 449,
                'RAPN20': 750,
                'RAPN96': 232,
@@ -25,12 +25,16 @@ def main():
                'RAPN81': 333,
                'RAPN95': 366,
                'RAPN28': 227,
-               'RAPN19': 472}
+               'RAPN19': 472,
+               'RAPN50': 469,
+               'RAPN89': 384,
+               'RAPN48': 295}
 
     comb6 = list(combinations(dir, 6))
     comb7 = list(combinations(dir, 7))
     comb8 = list(combinations(dir, 8))
-    print(len(comb6), len(comb7), len(comb8))
+    comb9 = list(combinations(dir, 9))
+    print(len(comb6), len(comb7), len(comb8), len(comb9))
 
     #masks.sort()
 
@@ -51,6 +55,20 @@ def main():
      'Prograsp Forceps', 'Right PBP Needle Driver', 'Scissors', 'Suction', 'Surgical_Glove_Tip', 'Suture needle',
      'Suture wire', 'Veriset', 'Vessel Loop', 'Vessel Sealer Extend', 'Echography', 'Da Vinci trocar',
      'Assistant trocar', 'Airseal trocar', 'Foam extruder']
+
+    #compulsory object in the test set
+    compulsory_list = ['Background', 'Bulldog clamp', 'Bulldog wire', 'Cadiere Forceps',
+                    'Endobag', 'Fenestrated Bipolar Forceps',
+                    'Force Bipolar', 'Gauze', 'Hemolock Clip Applier', 'Hemolock Clip', 'Inside Body',
+                    'Laparoscopic Fenestrated Forceps', 'Laparoscopic Needle Driver',
+                    'Large Needle Driver', 'Monopolar Curved Scissors',
+                    'Prograsp Forceps', 'Suction',
+                    'Suture needle',
+                    'Suture wire', 'Veriset', 'Vessel Loop', 'Echography', 'Da Vinci trocar']
+    compulsory_index = []
+    for i in compulsory_list:
+        compulsory_index.append(classes_list.index(i))
+    print('compulsory index', compulsory_index)
 
     counter = []
     for d in dir:
@@ -83,13 +101,21 @@ def main():
         curr_counter = []
         for d in co:
             curr_len += len_dir[d]
-        if curr_len < 2200 or curr_len > 2800:
+        if curr_len < 2200 or curr_len > 3000:
             continue
-        print(co)
         for d in co:
             curr_counter.append(counter[dir.index(d)])
 
         count_classes = np.sum(curr_counter, axis=0)
+
+        lack_class = False
+        for ind in compulsory_index:
+            if count_classes[ind] == 0:
+                lack_class = True
+        if lack_class == True:
+            print(co, 'Lack class')
+            continue
+        print(co)
 
         count_classes = [i / curr_len for i in count_classes]
         dist = distance.euclidean(count_classes, class_distribution)
@@ -105,13 +131,21 @@ def main():
         curr_counter = []
         for d in co:
             curr_len += len_dir[d]
-        if curr_len < 2200 or curr_len > 2800:
+        if curr_len < 2200 or curr_len > 3000:
             continue
-        print(co)
         for d in co:
             curr_counter.append(counter[dir.index(d)])
 
         count_classes = np.sum(curr_counter, axis=0)
+
+        lack_class = False
+        for ind in compulsory_index:
+            if count_classes[ind] == 0:
+                lack_class = True
+        if lack_class == True:
+            print(co, 'Lack class')
+            continue
+        print(co)
 
         count_classes = [i / curr_len for i in count_classes]
         dist = distance.euclidean(count_classes, class_distribution)
@@ -127,13 +161,21 @@ def main():
         curr_counter = []
         for d in co:
             curr_len += len_dir[d]
-        if curr_len < 2200 or curr_len > 2800:
+        if curr_len < 2200 or curr_len > 3000:
             continue
-        print(co)
         for d in co:
             curr_counter.append(counter[dir.index(d)])
 
         count_classes = np.sum(curr_counter, axis=0)
+
+        lack_class = False
+        for ind in compulsory_index:
+            if count_classes[ind] == 0:
+                lack_class = True
+        if lack_class == True:
+            print(co, 'Lack class')
+            continue
+        print(co)
 
         count_classes = [i / curr_len for i in count_classes]
         dist = distance.euclidean(count_classes, class_distribution)
@@ -144,12 +186,45 @@ def main():
             best_len = curr_len
             print(best_list, min_distances)
 
+
+    for co in comb9:
+        curr_len = 0
+        curr_counter = []
+        for d in co:
+            curr_len += len_dir[d]
+        if curr_len < 2200 or curr_len > 3000:
+            continue
+        for d in co:
+            curr_counter.append(counter[dir.index(d)])
+
+        count_classes = np.sum(curr_counter, axis=0)
+
+        lack_class = False
+        for ind in compulsory_index:
+            if count_classes[ind] == 0:
+                lack_class = True
+        if lack_class == True:
+            print(co, 'Lack class')
+            continue
+        print(co)
+
+        count_classes = [i / curr_len for i in count_classes]
+        dist = distance.euclidean(count_classes, class_distribution)
+        if dist < min_distances:
+            min_distances = dist
+            best_list = co
+            best_distribution = count_classes
+            best_len = curr_len
+            print(best_list, min_distances)
+
+
     print('The minimum list found is: ', best_list)
+    print('The length of test set is: ', best_len)
     print("It's euclidean distance between the dataset is: ", min_distances)
     print('The best distribution is: ')
 
     for i in range(len(best_distribution)):
-        print(classes_list[i], best_distribution[i]/best_len)
+        print(classes_list[i], best_distribution[i])
 
 
 if __name__ == '__main__':
