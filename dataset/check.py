@@ -7,6 +7,7 @@ import os
 from scipy.stats import ks_2samp, kstest
 from scipy.spatial import distance
 import math
+from itertools import combinations
 
 def mean( hist ):
     mean = 0.0
@@ -15,28 +16,32 @@ def mean( hist ):
     mean/= len(hist)
     return mean
 
-def bhatta ( hist1,  hist2):
-    # calculate mean of hist1
-    h1_ = mean(hist1)
-
-    # calculate mean of hist2
-    h2_ = mean(hist2)
-
-    # calculate score
-    score = 0
-    for i in range(hist1.shape[0]):
-        score += math.sqrt( hist1[i] * hist2[i] )
-    # print h1_,h2_,score;
-    score = math.sqrt( 1 - ( 1 / math.sqrt(h1_*h2_*8*8) ) * score )
-    return score
 
 def main():
     # Specify the dataset folder
     source_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN/masks"
     #source_folder = "/Volumes/ORSI/Kevin/Dataset_RAPN_20procedures/train/masks"
     masks = glob.glob(source_folder + '/*/*.png')
-    dir = ['RAPN38', 'RAPN7', 'RAPN104', 'RAPN12', 'RAPN115', 'RAPN39', 'RAPN34']
-    dir.sort()
+    #dir = ['RAPN38', 'RAPN7', 'RAPN104', 'RAPN12', 'RAPN115', 'RAPN39', 'RAPN34']
+    dir = ['RAPN91', 'RAPN20', 'RAPN96', 'RAPN102', 'RAPN47', 'RAPN41', 'RAPN87', 'RAPN92', 'RAPN81', 'RAPN95',
+            'RAPN28', 'RAPN19']
+    len_dir = {'RAPN91': 449,
+               'RAPN20': 750,
+               'RAPN96': 232,
+               'RAPN102': 312,
+               'RAPN47': 269,
+               'RAPN41': 407,
+               'RAPN87': 249,
+               'RAPN92': 338,
+               'RAPN81': 333,
+               'RAPN95': 366,
+               'RAPN28': 227,
+               'RAPN19': 472}
+
+    comb6 = list(combinations(dir, 6))
+    comb7 = list(combinations(dir, 7))
+    comb8 = list(combinations(dir, 8))
+    print(len(comb6), len(comb7), len(comb8))
 
     masks.sort()
 
@@ -48,14 +53,6 @@ def main():
 
     print(class_distribution)
 
-    #print(ks_2samp(class_distribution,c_dist))
-
-    count_list = []
-    for el in [i[4:] for i in dir]:
-        st = "/RAPN{el}/".format(el=el)
-        count_list.append(len([i for i in masks if st in i]))
-    print(dir, count_list)
-
     # ordered list of all the classes
     classes_list =['Background', 'Bulldog clamp', 'Bulldog wire', 'Cadiere Forceps', 'Catheter',
      'Drain', 'Endobag', 'Endobag specimen retriever', 'Endobag wire', 'Fenestrated Bipolar Forceps', 'Fibrilar',
@@ -66,32 +63,104 @@ def main():
      'Suture wire', 'Veriset', 'Vessel Loop', 'Vessel Sealer Extend', 'Echography', 'Da Vinci trocar',
      'Assistant trocar', 'Airseal trocar', 'Foam extruder']
 
-    distances = []
-    count_classes = [0 for i in range(0, 40)]
-    count = 0
-    for d, c in zip(dir, count_list):
-        folder_mask = glob.glob(os.path.join(source_folder, d) + '/*.png')
-        if len(folder_mask) == 0:
-            distances.append(0)
+    min_distances = 1000
+    best_list = []
+    best_distribution = []
+    best_len = 0
+
+    for co in comb6:
+        count_classes = [0 for i in range(0, 40)]
+        curr_len = 0
+        for d in co:
+            curr_len += len_dir[d]
+        if curr_len < 2200 or curr_len > 2800:
             continue
-        print(d)
-        for mask_path in folder_mask:
-            mask = cv2.imread(mask_path, 0)
-            width, height = mask.shape
-            flat = mask.reshape(width * height)
-            # find the different colors which occur in the mask, to understand the classes present in the image
-            classes = np.unique(flat)
+        for d in co:
+            folder_mask = glob.glob(os.path.join(source_folder, d) + '/*.png')
+            for mask_path in folder_mask:
+                mask = cv2.imread(mask_path, 0)
+                width, height = mask.shape
+                flat = mask.reshape(width * height)
+                # find the different colors which occur in the mask, to understand the classes present in the image
+                classes = np.unique(flat)
 
-            # loop over the image to check the classes present in it
-            for c in classes:
-                count_classes[c] += 1
-            count += 1
+                # loop over the image to check the classes present in it
+                for c in classes:
+                    count_classes[c] += 1
 
-        #print(kstest(count_classes, class_distribution))
-    print(count)
+        count_classes = [i / curr_len for i in count_classes]
+        dist = distance.euclidean(count_classes, class_distribution)
+        if dist < min_distances:
+            min_distances = dist
+            best_list = co
+            best_distribution = count_classes
+            best_len = curr_len
+            print(best_list, min_distances)
 
-    for i in range(len(classes_list)):
-        print(classes_list[i], count_classes[i]/count)
+    for co in comb7:
+        count_classes = [0 for i in range(0, 40)]
+        curr_len = 0
+        for d in co:
+            curr_len += len_dir[d]
+        if curr_len < 2200 or curr_len > 2800:
+            continue
+        for d in co:
+            folder_mask = glob.glob(os.path.join(source_folder, d) + '/*.png')
+            for mask_path in folder_mask:
+                mask = cv2.imread(mask_path, 0)
+                width, height = mask.shape
+                flat = mask.reshape(width * height)
+                # find the different colors which occur in the mask, to understand the classes present in the image
+                classes = np.unique(flat)
+
+                # loop over the image to check the classes present in it
+                for c in classes:
+                    count_classes[c] += 1
+
+        count_classes = [i / curr_len for i in count_classes]
+        dist = distance.euclidean(count_classes, class_distribution)
+        if dist < min_distances:
+            min_distances = dist
+            best_list = co
+            best_distribution = count_classes
+            best_len = curr_len
+            print(best_list, min_distances)
+
+    for co in comb8:
+        count_classes = [0 for i in range(0, 40)]
+        curr_len = 0
+        for d in co:
+            curr_len += len_dir[d]
+        if curr_len < 2200 or curr_len > 2800:
+            continue
+        for d in co:
+            folder_mask = glob.glob(os.path.join(source_folder, d) + '/*.png')
+            for mask_path in folder_mask:
+                mask = cv2.imread(mask_path, 0)
+                width, height = mask.shape
+                flat = mask.reshape(width * height)
+                # find the different colors which occur in the mask, to understand the classes present in the image
+                classes = np.unique(flat)
+
+                # loop over the image to check the classes present in it
+                for c in classes:
+                    count_classes[c] += 1
+
+        count_classes = [i / curr_len for i in count_classes]
+        dist = distance.euclidean(count_classes, class_distribution)
+        if dist < min_distances:
+            min_distances = dist
+            best_list = co
+            best_distribution = count_classes
+            best_len = curr_len
+            print(best_list, min_distances)
+
+    print('The minimum list found is: ', best_list)
+    print("It's euclidean distance between the dataset is: ", min_distances)
+    print('The best distribution is: ')
+
+    for i in range(len(best_distribution)):
+        print(classes_list[i], best_distribution[i]/best_len)
 
 
 if __name__ == '__main__':
