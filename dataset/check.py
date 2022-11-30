@@ -21,7 +21,7 @@ def main():
     # Specify the dataset folder
     source_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN/masks"
     #source_folder = "/Volumes/ORSI/Kevin/Dataset_RAPN_20procedures/train/masks"
-    masks = glob.glob(source_folder + '/*/*.png')
+    #masks = glob.glob(source_folder + '/*/*.png')
     #dir = ['RAPN38', 'RAPN7', 'RAPN104', 'RAPN12', 'RAPN115', 'RAPN39', 'RAPN34']
     dir = ['RAPN91', 'RAPN20', 'RAPN96', 'RAPN102', 'RAPN47', 'RAPN41', 'RAPN87', 'RAPN92', 'RAPN81', 'RAPN95',
             'RAPN28', 'RAPN19']
@@ -43,7 +43,7 @@ def main():
     comb8 = list(combinations(dir, 8))
     print(len(comb6), len(comb7), len(comb8))
 
-    masks.sort()
+    #masks.sort()
 
     # class distribution among the RAPN100 Dataset images, previously computed
     class_distribution = [30261, 1360, 762, 1874, 11, 61, 784, 117, 217, 5665, 18, 15239, 1500, 536, 7717, 352, 99, 936,
