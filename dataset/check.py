@@ -1,31 +1,20 @@
 import cv2
 import glob
-from alive_progress import alive_bar
 import numpy as np
-import pandas as pd
 import os
-from scipy.stats import ks_2samp, kstest
 from scipy.spatial import distance
-import math
 from itertools import combinations
-
-def mean( hist ):
-    mean = 0.0
-    for i in hist:
-        mean += i
-    mean/= len(hist)
-    return mean
 
 
 def main():
     # Specify the dataset folder
-    #source_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN/masks"
-    source_folder = "/Volumes/ORSI/Kevin/Dataset_RAPN_20procedures/train/masks"
+    source_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN/masks"
+    #source_folder = "/Volumes/ORSI/Kevin/Dataset_RAPN_20procedures/train/masks"
     #masks = glob.glob(source_folder + '/*/*.png')
     #dir = ['RAPN38', 'RAPN7', 'RAPN104', 'RAPN12', 'RAPN115', 'RAPN39', 'RAPN34']
-    dir = ['RAPN7', 'RAPN20', 'RAPN96', 'RAPN102', 'RAPN47', 'RAPN41', 'RAPN87', 'RAPN92', 'RAPN81', 'RAPN95',
+    dir = ['RAPN91', 'RAPN20', 'RAPN96', 'RAPN102', 'RAPN47', 'RAPN41', 'RAPN87', 'RAPN92', 'RAPN81', 'RAPN95',
             'RAPN28', 'RAPN19']
-    len_dir = {'RAPN7': 449,
+    len_dir = {'RAPN91': 449,
                'RAPN20': 750,
                'RAPN96': 232,
                'RAPN102': 312,
@@ -42,9 +31,6 @@ def main():
     comb7 = list(combinations(dir, 7))
     comb8 = list(combinations(dir, 8))
     print(len(comb6), len(comb7), len(comb8))
-    print(comb6)
-    print(comb7)
-    print(comb8)
 
     #masks.sort()
 
