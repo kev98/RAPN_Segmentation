@@ -28,7 +28,12 @@ def main():
                'RAPN19': 472,
                'RAPN50': 469,
                'RAPN89': 384,
-               'RAPN48': 295}
+               'RAPN48': 295,
+               'RAPN31': 491,
+               'RAPN99': 357,
+               'RAPN80': 341,
+               'RAPN45': 174,
+               'RAPN108': 153}
 
     comb6 = list(combinations(dir, 6))
     comb7 = list(combinations(dir, 7))
