@@ -13,7 +13,7 @@ def main():
     #masks = glob.glob(source_folder + '/*/*.png')
     #dir = ['RAPN38', 'RAPN7', 'RAPN104', 'RAPN12', 'RAPN115', 'RAPN39', 'RAPN34']
     dir = ['RAPN91', 'RAPN20', 'RAPN96', 'RAPN102', 'RAPN47', 'RAPN41', 'RAPN87', 'RAPN92', 'RAPN81', 'RAPN95',
-            'RAPN28', 'RAPN19', 'RAPN50', 'RAPN89', 'RAPN48']
+            'RAPN28', 'RAPN19', 'RAPN50', 'RAPN89', 'RAPN48', 'RAPN31', 'RAPN99', 'RAPN80', 'RAPN45', 'RAPN108']
     len_dir = {'RAPN91': 449,
                'RAPN20': 750,
                'RAPN96': 232,
@@ -57,7 +57,7 @@ def main():
      'Assistant trocar', 'Airseal trocar', 'Foam extruder']
 
     #compulsory object in the test set
-    compulsory_list = ['Background', 'Bulldog clamp', 'Bulldog wire', 'Cadiere Forceps',
+    compulsory_list = ['Background', 'Bulldog clamp', 'Bulldog wire',
                     'Endobag', 'Fenestrated Bipolar Forceps',
                     'Force Bipolar', 'Gauze', 'Hemolock Clip Applier', 'Hemolock Clip', 'Inside Body',
                     'Laparoscopic Fenestrated Forceps', 'Laparoscopic Needle Driver',
