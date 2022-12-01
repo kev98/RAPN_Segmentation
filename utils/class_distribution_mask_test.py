@@ -43,7 +43,7 @@ def main():
         # Update the progress bar
         bar()
 
-    dist = distance.euclidean([i/3197 for i in count_classes], class_distribution)
+    dist = distance.euclidean([i/3197 for i in count_classes], [i/30438 for i in class_distribution])
 
     # ordered list of all the classes
     classes_list =['Background', 'Bulldog clamp', 'Bulldog wire', 'Cadiere Forceps', 'Catheter',
