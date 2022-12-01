@@ -5,6 +5,7 @@ import json
 import numpy as np
 import pandas as pd
 import os
+from scipy.spatial import distance
 
 
 def main():
@@ -13,6 +14,9 @@ def main():
     #source_folder = "/Volumes/ORSI/Kevin/Dataset_RAPN_20procedures/train/masks"
 
     dir_list = ['RAPN91', 'RAPN20', 'RAPN96', 'RAPN47', 'RAPN50', 'RAPN48', 'RAPN115', 'RAPN36']
+    class_distribution = [30261, 1360, 762, 1874, 11, 61, 784, 117, 217, 5665, 18, 15239, 1500, 536, 7717, 352, 99, 936,
+                          470, 30, 12650, 1, 0, 60, 22938, 4464, 0, 6, 12130, 37, 5109, 8035, 712, 3035, 0, 1031, 1093,
+                          22, 244, 31]
 
     #masks = glob.glob(source_folder + '/masks/*/*.png')
     #masks.sort()
@@ -39,6 +43,8 @@ def main():
         # Update the progress bar
         bar()
 
+    dist = distance.euclidean(count_classes, class_distribution)
+
     # ordered list of all the classes
     classes_list =['Background', 'Bulldog clamp', 'Bulldog wire', 'Cadiere Forceps', 'Catheter',
      'Drain', 'Endobag', 'Endobag specimen retriever', 'Endobag wire', 'Fenestrated Bipolar Forceps', 'Fibrilar',
@@ -52,6 +58,7 @@ def main():
     # create a Dataframe with the occurencies of each class
     df = pd.DataFrame(count_classes, index=classes_list, columns=['Occurencies'])
     print(df)
+    print('The euclidean distance between the whole dataset and the test set is: ', dist)
 
     df.to_excel(source_folder + '/class_distribution_testset.xlsx')
 
