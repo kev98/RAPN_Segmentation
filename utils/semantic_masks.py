@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 import glob
 from alive_progress import alive_bar
+import json
 
 # Define the mapping of the classes to their respective color in RGB
 '''class_color_mapping = {
@@ -18,11 +19,24 @@ from alive_progress import alive_bar
     1: (0, 130, 200),       # Instruments
 }'''
 
-# da modificare !!!!!
-def class2color(mask, class_color_mapping):
+# Define the mapping of the classes to their respective color in RGB for the MULTICLASS_1 problem
+# (build using class_mapping.json and config.json)
+color_mapping = {
+    0: (0, 0, 0),           # Background - BLACK
+    1: (209, 25, 30),       # Force Bipolar - RED
+    2: (24, 200, 59),       # Fenestrated Bipolar Forceps - GREEN
+    3: (242, 14, 138),      # Prograsp Forceps - MAGENTA
+    4: (66, 62, 112),       # Monopolar Curved Scissors - DARK PURPLE
+    5: (130, 1, 152),       # Suction - PURPLE
+    6: (159, 89, 106),      # Large Needle Driver -
+    7: (92, 154, 27)        # Echography - DARK GREEN
+}
+
+
+def class2color(mask):
     """
     Function which generates a colored mask based on the input class value mask
-    :param mask:Aa mask where each class has its own integer value
+    :param mask: A mask where each class has its own integer value
     :return: A mask where each class has its own color
     """
 
@@ -30,9 +44,9 @@ def class2color(mask, class_color_mapping):
     color_mask = np.zeros([mask.shape[0], mask.shape[1], 3])
 
     # Iterate over the possible class values, as defined in class_color_mapping
-    for i in class_color_mapping:
+    for i in color_mapping:
         # Assign the color corresponding to the class value to the appropriate pixels in the blank image
-        color_mask[np.where(mask == i)] = class_color_mapping[i]
+        color_mask[np.where(mask == i)] = color_mapping[i]
 
     return color_mask
 

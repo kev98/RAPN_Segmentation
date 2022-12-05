@@ -10,6 +10,7 @@ from torchsummaryX import summary
 from torchmetrics.classification import MulticlassFBetaScore, BinaryFBetaScore
 from torchmetrics import Dice
 import pandas as pd
+import os
 
 
 def computeIoU(predictions, targets, num_classes):
@@ -62,9 +63,13 @@ def saveResults(X_test, model, num_classes, platform, encoder, model_name, out_d
         # list of all inference times
         comp_time.append(end - start)
 
+        # convert the mask to a colored mask and save it
         if save_img:
+            save_dir = os.path.join(out_dir, 'TEST')
+            if not os.path.exists(save_dir):
+                os.mkdir(save_dir)
             mask = class2color(res)
-            cv2.imwrite(out_dir + '/TEST/' + encoder + '-' + model_name + '_' + str(ix) + '.png', mask[:, :, ::-1])
+            cv2.imwrite(save_dir + '/predicted_mask_' + str(ix) + '.png', mask[:, :, ::-1])
         ix = ix + 1
 
     IoU = computeIoU(predictions, targets, num_classes)
