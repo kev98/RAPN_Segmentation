@@ -26,26 +26,26 @@ def main():
     count_classes = [0 for i in range(0, 40)]
 
     with alive_bar(len(dir_list)) as bar:
-        for dir in dir_list:
-            masks = glob.glob(os.path.join(source_folder, dir) + '/*.png')
-            masks.sort()
-            for mask_path in masks:
-                # open the mask and retrieve the size
-                print(mask_path)
-                mask = cv2.imread(mask_path, 0)
-                width, height = mask.shape
-                flat = mask.reshape(width*height)
-                # find the different colors which occur in the mask, to understand the classes present in the image
-                classes = np.unique(flat)
+        #for dir in dir_list:
+        masks = glob.glob(source_folder + '/*/*.png')
+        masks.sort()
+        for mask_path in masks:
+            # open the mask and retrieve the size
+            print(mask_path)
+            mask = cv2.imread(mask_path, 0)
+            width, height = mask.shape
+            flat = mask.reshape(width*height)
+            # find the different colors which occur in the mask, to understand the classes present in the image
+            classes = np.unique(flat)
 
-                # loop over the image to check the classes present in it
-                for c in classes:
-                    count_classes[c] += 1
+            # loop over the image to check the classes present in it
+            for c in classes:
+                count_classes[c] += 1
 
         # Update the progress bar
         bar()
 
-    dist = distance.euclidean([i/4579 for i in count_classes], [i/30438 for i in class_distribution])
+    dist = distance.euclidean([i/22662 for i in count_classes], [i/30438 for i in class_distribution])
 
     # ordered list of all the classes
     classes_list =['Background', 'Bulldog clamp', 'Bulldog wire', 'Cadiere Forceps', 'Catheter',
@@ -62,7 +62,7 @@ def main():
     print(df)
     print('The euclidean distance between the whole dataset and the test set is: ', dist)
 
-    df.to_excel(source_folder + '/class_distribution_testset.xlsx')
+    df.to_excel(source_folder + '/class_distribution_trainset.xlsx')
 
 
 if __name__ == '__main__':
