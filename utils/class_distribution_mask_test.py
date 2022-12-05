@@ -10,7 +10,7 @@ from scipy.spatial import distance
 
 def main():
     # Specify the dataset folder
-    source_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN/masks"
+    source_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN/train/masks"
     #source_folder = "/Volumes/ORSI/Kevin/Dataset_RAPN_20procedures/train/masks"
 
     #dir_list = ['RAPN91', 'RAPN20', 'RAPN96', 'RAPN47', 'RAPN50', 'RAPN48', 'RAPN115', 'RAPN36']
