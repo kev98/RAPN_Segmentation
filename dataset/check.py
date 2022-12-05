@@ -12,7 +12,7 @@ def main():
     #source_folder = "/Volumes/ORSI/Kevin/Dataset_RAPN_20procedures/train/masks"
     #masks = glob.glob(source_folder + '/*/*.png')
     #dir = ['RAPN38', 'RAPN7', 'RAPN104', 'RAPN12', 'RAPN115', 'RAPN39', 'RAPN34']
-    dir = ['RAPN91', 'RAPN20', 'RAPN96', 'RAPN102', 'RAPN47', 'RAPN41', 'RAPN87', 'RAPN92', 'RAPN81', 'RAPN95',
+    '''dir = ['RAPN91', 'RAPN20', 'RAPN96', 'RAPN102', 'RAPN47', 'RAPN41', 'RAPN87', 'RAPN92', 'RAPN81', 'RAPN95',
             'RAPN28', 'RAPN19', 'RAPN50', 'RAPN89', 'RAPN48', 'RAPN31', 'RAPN99', 'RAPN80', 'RAPN45', 'RAPN108']
     len_dir = {'RAPN91': 449,
                'RAPN20': 750,
@@ -34,12 +34,38 @@ def main():
                'RAPN80': 341,
                'RAPN45': 174,
                'RAPN108': 153}
+    '''
+    dir = ['RAPN102', 'RAPN41', 'RAPN87', 'RAPN92', 'RAPN81', 'RAPN95', 'RAPN28', 'RAPN19', 'RAPN89', 'RAPN31',
+           'RAPN99', 'RAPN80', 'RAPN45', 'RAPN108', 'RAPN30', 'RAPN79', 'RAPN98', 'RAPN109', 'RAPN76', 'RAPN60']
+    len_dir = {'RAPN102': 312,
+               'RAPN41': 407,
+               'RAPN87': 249,
+               'RAPN92': 338,
+               'RAPN81': 333,
+               'RAPN95': 366,
+               'RAPN28': 227,
+               'RAPN19': 472,
+               'RAPN89': 384,
+               'RAPN31': 491,
+               'RAPN99': 357,
+               'RAPN80': 341,
+               'RAPN45': 174,
+               'RAPN108': 153,
+               'RAPN30': 371,
+               'RAPN79': 268,
+               'RAPN98': 186,
+               'RAPN109': 109,
+               'RAPN76': 248,
+               'RAPN60': 241}
 
-    comb6 = list(combinations(dir, 6))
-    comb7 = list(combinations(dir, 7))
-    comb8 = list(combinations(dir, 8))
-    comb9 = list(combinations(dir, 9))
-    print(len(comb6), len(comb7), len(comb8), len(comb9))
+    comb10 = list(combinations(dir, 10))
+    comb11 = list(combinations(dir, 11))
+    comb12 = list(combinations(dir, 12))
+    comb13 = list(combinations(dir, 13))
+    comb14 = list(combinations(dir, 14))
+    comb15 = list(combinations(dir, 15))
+
+    print(len(comb10), len(comb11), len(comb12), len(comb13), len(comb14), len(comb15))
 
     #masks.sort()
 
@@ -101,12 +127,12 @@ def main():
     best_distribution = []
     best_len = 0
 
-    for co in comb6:
+    for co in comb10:
         curr_len = 0
         curr_counter = []
         for d in co:
             curr_len += len_dir[d]
-        if curr_len < 2200 or curr_len > 3000:
+        if curr_len < 3600 or curr_len > 4300:
             continue
         for d in co:
             curr_counter.append(counter[dir.index(d)])
@@ -131,12 +157,12 @@ def main():
             best_len = curr_len
             print(best_list, min_distances)
 
-    for co in comb7:
+    for co in comb11:
         curr_len = 0
         curr_counter = []
         for d in co:
             curr_len += len_dir[d]
-        if curr_len < 2200 or curr_len > 3000:
+        if curr_len < 3600 or curr_len > 4300:
             continue
         for d in co:
             curr_counter.append(counter[dir.index(d)])
@@ -161,12 +187,12 @@ def main():
             best_len = curr_len
             print(best_list, min_distances)
 
-    for co in comb8:
+    for co in comb12:
         curr_len = 0
         curr_counter = []
         for d in co:
             curr_len += len_dir[d]
-        if curr_len < 2200 or curr_len > 3000:
+        if curr_len < 3600 or curr_len > 4300:
             continue
         for d in co:
             curr_counter.append(counter[dir.index(d)])
@@ -191,13 +217,12 @@ def main():
             best_len = curr_len
             print(best_list, min_distances)
 
-
-    for co in comb9:
+    for co in comb13:
         curr_len = 0
         curr_counter = []
         for d in co:
             curr_len += len_dir[d]
-        if curr_len < 2200 or curr_len > 3000:
+        if curr_len < 3600 or curr_len > 4300:
             continue
         for d in co:
             curr_counter.append(counter[dir.index(d)])
@@ -221,6 +246,67 @@ def main():
             best_distribution = count_classes
             best_len = curr_len
             print(best_list, min_distances)
+
+    for co in comb14:
+        curr_len = 0
+        curr_counter = []
+        for d in co:
+            curr_len += len_dir[d]
+        if curr_len < 3600 or curr_len > 4300:
+            continue
+        for d in co:
+            curr_counter.append(counter[dir.index(d)])
+
+        count_classes = np.sum(curr_counter, axis=0)
+
+        lack_class = False
+        for ind in compulsory_index:
+            if count_classes[ind] == 0:
+                lack_class = True
+        if lack_class == True:
+            print(co, 'Lack class')
+            continue
+        print(co)
+
+        count_classes = [i / curr_len for i in count_classes]
+        dist = distance.euclidean(count_classes, class_distribution)
+        if dist < min_distances:
+            min_distances = dist
+            best_list = co
+            best_distribution = count_classes
+            best_len = curr_len
+            print(best_list, min_distances)
+
+    for co in comb15:
+        curr_len = 0
+        curr_counter = []
+        for d in co:
+            curr_len += len_dir[d]
+        if curr_len < 3600 or curr_len > 4300:
+            continue
+        for d in co:
+            curr_counter.append(counter[dir.index(d)])
+
+        count_classes = np.sum(curr_counter, axis=0)
+
+        lack_class = False
+        for ind in compulsory_index:
+            if count_classes[ind] == 0:
+                lack_class = True
+        if lack_class == True:
+            print(co, 'Lack class')
+            continue
+        print(co)
+
+        count_classes = [i / curr_len for i in count_classes]
+        dist = distance.euclidean(count_classes, class_distribution)
+        if dist < min_distances:
+            min_distances = dist
+            best_list = co
+            best_distribution = count_classes
+            best_len = curr_len
+            print(best_list, min_distances)
+
 
 
     print('The minimum list found is: ', best_list)
