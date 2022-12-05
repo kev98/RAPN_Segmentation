@@ -13,7 +13,9 @@ def main():
     source_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN/masks"
     #source_folder = "/Volumes/ORSI/Kevin/Dataset_RAPN_20procedures/train/masks"
 
-    dir_list = ['RAPN91', 'RAPN20', 'RAPN96', 'RAPN47', 'RAPN50', 'RAPN48', 'RAPN115', 'RAPN36']
+    #dir_list = ['RAPN91', 'RAPN20', 'RAPN96', 'RAPN47', 'RAPN50', 'RAPN48', 'RAPN115', 'RAPN36']
+    dir_list = ['RAPN102', 'RAPN41', 'RAPN92', 'RAPN81', 'RAPN95', 'RAPN19', 'RAPN89', 'RAPN45', 'RAPN108', 'RAPN79',
+                'RAPN98', 'RAPN76', 'RAPN7', 'RAPN8']
     class_distribution = [30261, 1360, 762, 1874, 11, 61, 784, 117, 217, 5665, 18, 15239, 1500, 536, 7717, 352, 99, 936,
                           470, 30, 12650, 1, 0, 60, 22938, 4464, 0, 6, 12130, 37, 5109, 8035, 712, 3035, 0, 1031, 1093,
                           22, 244, 31]
@@ -43,7 +45,7 @@ def main():
         # Update the progress bar
         bar()
 
-    dist = distance.euclidean([i/3197 for i in count_classes], [i/30438 for i in class_distribution])
+    dist = distance.euclidean([i/4579 for i in count_classes], [i/30438 for i in class_distribution])
 
     # ordered list of all the classes
     classes_list =['Background', 'Bulldog clamp', 'Bulldog wire', 'Cadiere Forceps', 'Catheter',
