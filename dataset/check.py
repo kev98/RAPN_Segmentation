@@ -133,7 +133,9 @@ def main():
         for d in co:
             curr_len += len_dir[d]
         if curr_len < 3600 or curr_len > 4300:
+            print(co, 'length error')
             continue
+        print(co, 'OK')
         for d in co:
             curr_counter.append(counter[dir.index(d)])
 
@@ -163,7 +165,9 @@ def main():
         for d in co:
             curr_len += len_dir[d]
         if curr_len < 3600 or curr_len > 4300:
+            print(co, 'length error')
             continue
+        print(co, 'OK')
         for d in co:
             curr_counter.append(counter[dir.index(d)])
 
@@ -193,7 +197,9 @@ def main():
         for d in co:
             curr_len += len_dir[d]
         if curr_len < 3600 or curr_len > 4300:
+            print(co, 'length error')
             continue
+        print(co, 'OK')
         for d in co:
             curr_counter.append(counter[dir.index(d)])
 
@@ -223,7 +229,9 @@ def main():
         for d in co:
             curr_len += len_dir[d]
         if curr_len < 3600 or curr_len > 4300:
+            print(co, 'length error')
             continue
+        print(co, 'OK')
         for d in co:
             curr_counter.append(counter[dir.index(d)])
 
@@ -253,7 +261,9 @@ def main():
         for d in co:
             curr_len += len_dir[d]
         if curr_len < 3600 or curr_len > 4300:
+            print(co, 'length error')
             continue
+        print(co, 'OK')
         for d in co:
             curr_counter.append(counter[dir.index(d)])
 
@@ -283,7 +293,9 @@ def main():
         for d in co:
             curr_len += len_dir[d]
         if curr_len < 3600 or curr_len > 4300:
+            print(co, 'length error')
             continue
+        print(co, 'OK')
         for d in co:
             curr_counter.append(counter[dir.index(d)])
 
