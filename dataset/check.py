@@ -8,7 +8,7 @@ from itertools import combinations
 
 def main():
     # Specify the dataset folder
-    source_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN/masks"
+    source_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN/train/masks"
     #source_folder = "/Volumes/ORSI/Kevin/Dataset_RAPN_20procedures/train/masks"
     #masks = glob.glob(source_folder + '/*/*.png')
     #dir = ['RAPN38', 'RAPN7', 'RAPN104', 'RAPN12', 'RAPN115', 'RAPN39', 'RAPN34']
