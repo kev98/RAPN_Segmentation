@@ -71,10 +71,11 @@ def saveResults(X_test, model, num_classes, platform, encoder, model_name, out_d
             mask = class2color(res)
             cv2.imwrite(save_dir + '/predicted_mask_' + str(ix) + '.png', mask[:, :, ::-1])
         ix = ix + 1
-
+    
     IoU = computeIoU(predictions, targets, num_classes)
     FBetaScore = np.array(computeFBetaScore(predictions, targets, num_classes))
-    DiceScore = np.array(computeDiceScore(predictions, targets))
+    #DiceScore = np.array(computeDiceScore(predictions, targets))
+    DiceScore = 0
 
     return IoU, sum(comp_time)/len(comp_time), FBetaScore, DiceScore
 

@@ -4,7 +4,7 @@ import cv2
 import glob
 from alive_progress import alive_bar
 import json
-from utils.semantic_masks import color2class
+from semantic_masks import color2class
 
 
 def create_dataset_tree(source, dest):

@@ -55,7 +55,7 @@ MODEL_NAME = config['model']  # segmentation model
 
 # DATA ROOT
 if PLATFORM == "server":
-    DATA_DIR = r"home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN"
+    DATA_DIR = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN"
     out_dir = r"/home/kmarc/workspace/nas_private/RAPN_results/base_model/multiclass_1" + \
               f"/{MODEL_NAME}{ENCODER}_bs{BATCH_SIZE}_lr{LEARNING_RATE}_{LOSS}"
     train_dir = os.path.join(DATA_DIR, 'train')
@@ -144,9 +144,9 @@ def main():
     #print(train_dataset.__getitem__(0)[1].shape)
 
     # TRAIN AND VALIDATION LOADER
-    train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=4, drop_last=True)
-    valid_loader = DataLoader(valid_dataset, batch_size=1, shuffle=False, num_workers=4)
-    test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False, num_workers=4)
+    train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=8, drop_last=True)
+    valid_loader = DataLoader(valid_dataset, batch_size=1, shuffle=False, num_workers=8)
+    test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False, num_workers=8)
 
     # LOSSES (2 losses if you want to experience with a combination of losses, otherwise just pass None)
     if LOSS == 'focal':
@@ -217,7 +217,6 @@ def main():
             # if we have the test set this has to be made on the test set only at the end
             IoU, inference_time, FBetaScore, DiceScore = saveResults(valid_loader, model, len(classes), PLATFORM,
                                                                      ENCODER, MODEL_NAME, out_dir, save_img=save)
-
             curr_res = create_dataframe(model, i, IoU, inference_time, FBetaScore, classes,
                                         train_logs, valid_logs, DiceScore)
             results_df = pd.concat([results_df, curr_res])
@@ -259,6 +258,7 @@ def main():
             print(CLASSES[c], IoU[c])
 
         scheduler.step(train_logs['loss'])
+        print('Ready for the next epoch')
 
     # SCOMMENTA LE PROSSIME 4 RIGHE SE HAI IL TEST SET
     test_logs, test_iou, test_dice = valid_epoch.run(test_loader)
