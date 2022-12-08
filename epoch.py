@@ -108,11 +108,15 @@ class TrainEpoch(Epoch):
         self.optimizer.zero_grad()
         prediction = self.model.forward(x)
         # + self.loss2(prediction, y)
+        if type(prediction) is tuple:
+            pred = prediction[0]
+        else:
+            pred = prediction
 
         if self.loss2 is None:
-            loss = self.loss(prediction, torch.argmax(y, dim=1))
+            loss = self.loss(pred, torch.argmax(y, dim=1))
         else:
-            loss = self.loss(prediction, torch.argmax(y, dim=1)) + self.loss2(prediction, torch.argmax(y, dim=1))
+            loss = self.loss(pred, torch.argmax(y, dim=1)) + self.loss2(pred, torch.argmax(y, dim=1))
 
         loss.backward()
         self.optimizer.step()
@@ -141,12 +145,17 @@ class ValidEpoch(Epoch):
             prediction = self.model.forward(x)
             # + self.loss2(prediction, y)
 
-            if self.loss2 is None:
-                loss = self.loss(prediction, torch.argmax(y, dim=1))
+            if type(prediction) is tuple:
+                pred = prediction[0]
             else:
-                loss = self.loss(prediction, torch.argmax(y, dim=1)) + self.loss2(prediction, torch.argmax(y, dim=1))
+                pred = prediction
 
-            preds = torch.argmax(prediction, dim=1)
+            if self.loss2 is None:
+                loss = self.loss(pred, torch.argmax(y, dim=1))
+            else:
+                loss = self.loss(pred, torch.argmax(y, dim=1)) + self.loss2(pred, torch.argmax(y, dim=1))
+
+            preds = torch.argmax(pred, dim=1)
             gts = torch.argmax(y, dim=1)
 
             i = []
