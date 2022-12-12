@@ -150,10 +150,12 @@ def main():
 
     # LOSSES (2 losses if you want to experience with a combination of losses, otherwise just pass None)
     if LOSS == 'focal':
-        loss = FocalLoss()
+        #loss = FocalLoss()
+        loss = smp.losses.FocalLoss(mode='multiclass', gamma=2)
         loss2 = None
     elif LOSS == 'dice':
-        loss = GDiceLoss()
+        #loss = GDiceLoss()
+        loss = smp.losses.DiceLoss(mode='multiclass', smooth=1e-5)
         loss2 = None
     elif LOSS == "focaldice":
         loss = FocalLoss()
