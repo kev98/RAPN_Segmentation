@@ -95,8 +95,8 @@ def main():
         class_mapping = json.load(openfile)
     class_mapping = class_mapping["instruments"]
 
-    images = glob.glob(source_folder + '/raw_images_new/*.png')
-    masks = glob.glob(source_folder + '/masks_new/*.png')
+    images = glob.glob(source_folder + '/raw_images_new/*/*.png')
+    masks = glob.glob(source_folder + '/masks_new/*/*.png')
     images.sort()
     masks.sort()
 
