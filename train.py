@@ -104,7 +104,7 @@ def main():
 
     # define preprocessing function
     preprocessing_fn = smp.encoders.get_preprocessing_fn('timm-mobilenetv3_large_100', ENCODER_WEIGHTS)
-    #model.load_state_dict(torch.load("/home/kmarc/workspace/nas_private/multiclass/models_SARRARP50/Unet++tu-efficientnetv2_rw_s_rd:5_bs16_lr0.001_focal/tu-efficientnetv2_rw_s-Unet++ce.pth"))
+    model.load_state_dict(torch.load("/home/kmarc/workspace/nas_private/RAPN_results/base_model/multiclass_1/UNet++tu-efficientnetv2_rw_s_bs16_lr0.001_focal/tu-efficientnetv2_rw_s-UNet++-30ce.pth"))
     model.to(DEVICE)
 
     # Get information about model
@@ -198,10 +198,10 @@ def main():
     # train model for N epochs
     results_df = pd.DataFrame()
     es_counter = 0
-    optimal_val_loss = 1000
-    max_score = 0
+    optimal_val_loss = 0.04389
+    max_score = 0.747009995894319
 
-    for i in range(1, NUM_EPOCHS + 1):
+    for i in range(9, NUM_EPOCHS + 1):
 
         print('\nEpoch: {}'.format(i))
 
@@ -220,6 +220,7 @@ def main():
             curr_res = create_dataframe(model, i, IoU, inference_time, FBetaScore, classes,
                                         train_logs, valid_logs, DiceScore)
             results_df = pd.concat([results_df, curr_res])
+            results_df.to_excel(out_dir + '/' + ENCODER + '-' + MODEL_NAME + f'-{NUM_EPOCHS}' + 'ce' + '.xlsx')
         else:
             IoU = valid_iou
 

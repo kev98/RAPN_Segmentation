@@ -162,8 +162,8 @@ def objective(trial):
     )
 
     # TRAIN AND VALIDATION LOADER
-    train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=4, drop_last=True)
-    valid_loader = DataLoader(valid_dataset, batch_size=1, shuffle=False, num_workers=4)
+    train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=8, drop_last=True)
+    valid_loader = DataLoader(valid_dataset, batch_size=1, shuffle=False, num_workers=8)
 
     # SCHEDULER for the reduction of the learning rate when the learning stagnates
     # namely when the train loss doesn't decrease for a fixed amount of epochs
@@ -221,10 +221,9 @@ def objective(trial):
 def main():
 
     study = optuna.create_study(direction="maximize")
-    study.optimize(objective, n_trials=2)
+    study.optimize(objective, n_trials=100, timeout=226800)
     fig = optuna.visualization.plot_param_importances(study)
-    fig.show()
-    plt.savefig('fig1.pdf')
+    fig.write_image('Optuna.png')
 
     pruned_trials = [t for t in study.trials if t.state == optuna.trial.TrialState.PRUNED]
     complete_trials = [t for t in study.trials if t.state == optuna.trial.TrialState.COMPLETE]
