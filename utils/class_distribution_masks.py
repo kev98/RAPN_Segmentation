@@ -11,7 +11,7 @@ def main():
     source_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN"
     #source_folder = "/Volumes/ORSI/Kevin/Dataset_RAPN_20procedures/train"
 
-    masks = glob.glob(source_folder + '*/masks/*/*.png')
+    masks = glob.glob(source_folder + '/*/masks/*/*.png')
     masks.sort()
 
     count_classes = [0 for i in range(0, 40)]

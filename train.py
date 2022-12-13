@@ -104,7 +104,7 @@ def main():
 
     # define preprocessing function
     preprocessing_fn = smp.encoders.get_preprocessing_fn('timm-mobilenetv3_large_100', ENCODER_WEIGHTS)
-    model.load_state_dict(torch.load("/home/kmarc/workspace/nas_private/RAPN_results/base_model/multiclass_1/UNet++tu-efficientnetv2_rw_s_bs16_lr0.001_focal/tu-efficientnetv2_rw_s-UNet++-30ce.pth"))
+    #model.load_state_dict(torch.load("/home/kmarc/workspace/nas_private/RAPN_results/base_model/multiclass_1/UNet++tu-efficientnetv2_rw_s_bs16_lr0.001_focal/tu-efficientnetv2_rw_s-UNet++-30ce.pth"))
     model.to(DEVICE)
 
     # Get information about model
@@ -144,9 +144,9 @@ def main():
     #print(train_dataset.__getitem__(0)[1].shape)
 
     # TRAIN AND VALIDATION LOADER
-    train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=8, drop_last=True)
-    valid_loader = DataLoader(valid_dataset, batch_size=1, shuffle=False, num_workers=8)
-    test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False, num_workers=8)
+    train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=4, drop_last=True)
+    valid_loader = DataLoader(valid_dataset, batch_size=1, shuffle=False, num_workers=4)
+    test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False, num_workers=4)
 
     # LOSSES (2 losses if you want to experience with a combination of losses, otherwise just pass None)
     if LOSS == 'focal':
@@ -200,10 +200,10 @@ def main():
     # train model for N epochs
     results_df = pd.DataFrame()
     es_counter = 0
-    optimal_val_loss = 0.04389
-    max_score = 0.747009995894319
+    optimal_val_loss = 1000
+    max_score = 0
 
-    for i in range(9, NUM_EPOCHS + 1):
+    for i in range(1, NUM_EPOCHS + 1):
 
         print('\nEpoch: {}'.format(i))
 
@@ -262,6 +262,8 @@ def main():
 
         scheduler.step(train_logs['loss'])
         print('Ready for the next epoch')
+
+        del train_logs, valid_logs, IoU
 
     # SCOMMENTA LE PROSSIME 4 RIGHE SE HAI IL TEST SET
     test_logs, test_iou, test_dice = valid_epoch.run(test_loader)
