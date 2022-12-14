@@ -56,7 +56,7 @@ def saveResults(X_test, model, num_classes, platform, encoder, model_name, out_d
             image = image.to(device=torch.device('cuda'))
 
         start = time.time()
-        res = np.argmax(model.predict(image)[0].cpu(), axis=0)
+        res = np.argmax(model.predict(image)[0].cpu().squeeze(), axis=0)
         predictions.append(res.numpy())
         end = time.time()
 
