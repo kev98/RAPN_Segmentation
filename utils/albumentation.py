@@ -21,7 +21,7 @@ def get_training_augmentation():
         albu.HueSaturationValue(p=0.9),
     ]
 
-    return albu.OneOf(train_transform, p=0.9)
+    return albu.OneOf(train_transform, p=0.3)
 
 
 # AUGMENTATION FOR VALIDATION DATA
