@@ -60,10 +60,11 @@ class RAPN_Dataset(BaseDataset):
 
     def __getitem__(self, i):
         # read image and mask
-        #print('image: ', self.images[i])
+        print('image: ', self.images[i])
         image = cv2.imread(self.images[i])
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         mask = cv2.imread(self.masks[i], 0)
+        print('     image and mask opened')
 
         # if we want to create a dataset for binary segmentation
         if len(self.classes) == 2:
@@ -76,16 +77,19 @@ class RAPN_Dataset(BaseDataset):
         sum = np.sum(mask, axis=2)
         result = np.logical_not(np.logical_xor(sum, mask[:, :, 0])).astype('float')
         mask[:, :, 0] = result
+        print('     mask transformed')
 
         # apply augmentations
         if self.augmentation:
             sample = self.augmentation(image=image, mask=mask)
             image, mask = sample['image'], sample['mask']
+        print('     augmentation applied')
 
         # apply preprocessing
         if self.preprocessing:
             sample = self.preprocessing(image=image, mask=mask)
             image, mask = sample['image'], sample['mask']
+        print('     preprocessing applied')
 
         return image, mask
 
