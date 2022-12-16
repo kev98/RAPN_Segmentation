@@ -79,7 +79,7 @@ def define_model(trial):
     # We optimize the dropout, the depth of the encoder and the activation function
     p = trial.suggest_float("dropout", 0.2, 0.5)
     #enc_depth = trial.suggest_int("encoder_depth", 3, 5)
-    activation = trial.suggest_categorical("activation", ["sigmoid", "softmax2d", "tanh"])
+    #activation = trial.suggest_categorical("activation", ["sigmoid", "softmax2d", "tanh"])
 
     # create segmentation model with pretrained encoder
     if MODEL_NAME == 'FPN':
@@ -88,7 +88,7 @@ def define_model(trial):
             #encoder_depth=enc_depth,
             encoder_weights=ENCODER_WEIGHTS,
             classes=len(classes),
-            activation=activation,
+            activation=ACTIVATION,
             aux_params={'classes': len(classes), 'dropout': p}
         )
     elif MODEL_NAME == 'DeepLabV3+':
@@ -98,7 +98,7 @@ def define_model(trial):
             encoder_weights=ENCODER_WEIGHTS,
             encoder_output_stride=16,
             classes=len(classes),
-            activation=activation,
+            activation=ACTIVATION,
             aux_params={'classes': len(classes), 'dropout': p}
         )
     elif MODEL_NAME == 'Unet++':
@@ -108,7 +108,7 @@ def define_model(trial):
             encoder_weights=ENCODER_WEIGHTS,
             decoder_channels=[256, 128, 64, 32, 16],
             classes=len(classes),
-            activation=activation,
+            activation=ACTIVATION,
             aux_params={'classes': len(classes), 'dropout': p}
         )
     else:
@@ -124,7 +124,7 @@ def objective(trial):
 
     # Generate optimizers
     optimizer_name = trial.suggest_categorical("optimizer", ["Adam", "AdamW", "RMSprop", "SGD"])
-    lr = trial.suggest_float("lr", 1e-5, 1e-1, log=True)
+    lr = trial.suggest_float("lr", 1e-5, 1e-2, log=True)
     optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=lr)
 
     #Choose the loss
