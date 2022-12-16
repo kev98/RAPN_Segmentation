@@ -37,8 +37,8 @@ SAVE_CRITERION = config['save']
 ACTIVATION = config['activation']
 PLATFORM = config['platform']
 PROFILE = config['profile']
-LEARNING_RATE = 1e-3
-PATIENCE = 10
+LEARNING_RATE = 7e-3
+PATIENCE = 15
 
 # Definition of the segmentation classes
 #classes = ["Background", "Instrument"]
@@ -63,7 +63,7 @@ if PLATFORM == "server":
     test_dir = os.path.join(DATA_DIR, 'test')
 elif PLATFORM == "local":
     DATA_DIR = r"/Volumes/ORSI/Kevin/Dataset_RAPN_20procedures"
-    out_dir = r"/Users/kevinmarchesini/Desktop/Internship @ Orsi Academy/RAPN_results/multiclass/models" + \
+    out_dir = r"/Users/kevinmarchesini/Desktop/Internship @ Orsi Academy/RAPN_results/multiclass_1/models" + \
               f"/{MODEL_NAME}{ENCODER}_bs{BATCH_SIZE}_lr{LEARNING_RATE}_{LOSS}"
     train_dir = os.path.join(DATA_DIR, 'train')
     valid_dir = os.path.join(DATA_DIR, 'val')
@@ -81,7 +81,7 @@ def main():
             encoder_weights=ENCODER_WEIGHTS,
             classes=len(classes),
             activation=ACTIVATION,
-            # aux_params= classification_params
+            aux_params={'classes':8, 'dropout':0.4}
         )
     elif MODEL_NAME == 'DeepLabV3+':
         model = smp.DeepLabV3Plus(
@@ -144,7 +144,7 @@ def main():
     #print(train_dataset.__getitem__(0)[1].shape)
 
     # TRAIN AND VALIDATION LOADER
-    train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=4, drop_last=True)
+    train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=8, drop_last=True)
     valid_loader = DataLoader(valid_dataset, batch_size=1, shuffle=False, num_workers=4)
     test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False, num_workers=4)
 
@@ -158,8 +158,10 @@ def main():
         loss = smp.losses.DiceLoss(mode='multiclass', smooth=1e-5)
         loss2 = None
     elif LOSS == "focaldice":
-        loss = FocalLoss()
-        loss2 = GDiceLossV2()
+        loss = smp.losses.FocalLoss(mode='multiclass', gamma=2.5)
+        loss2 = smp.losses.DiceLoss(mode='multiclass', smooth=1e-5)
+        #loss = FocalLoss()
+        #loss2 = GDiceLossV2()
 
     metrics = [
         # smp.utils.metrics.IoU(threshold=0.5),
@@ -172,7 +174,8 @@ def main():
 
     # SCHEDULER for the reduction of the learning rate when the learning stagnates
     # namely when the train loss doesn't decrease for a fixed amount of epochs
-    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience=7)
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience=5, threshold=5e-4,
+                                                           factor=0.2, verbose=True)
 
     # create epoch runners
     # it is a simple loop of iterating over dataloader`s samples
@@ -260,7 +263,7 @@ def main():
         for c in range(len(CLASSES)):
             print(CLASSES[c], IoU[c])
 
-        scheduler.step(train_logs['loss'])
+        scheduler.step(valid_logs['loss'])
         print('Ready for the next epoch')
 
         del train_logs, valid_logs, IoU
