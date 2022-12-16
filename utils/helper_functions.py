@@ -1,4 +1,4 @@
-import matplotlib.pyplot as plt
+# Some functions useful during the process
 
 import cv2
 import numpy as np

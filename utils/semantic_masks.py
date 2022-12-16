@@ -1,10 +1,4 @@
-import os.path
-
-import cv2
 import numpy as np
-import glob
-from alive_progress import alive_bar
-import json
 
 # Define the mapping of the classes to their respective color in RGB
 '''class_color_mapping = {
@@ -55,6 +49,7 @@ def color2class(color_mask, class_color_mapping):
     """
     Function which generates a class value mask based on the input colored mask
     :param color_mask: A mask where each class has its own color
+           class_color_mapping: A dictionary which maps each color into a class
     :return: A mask where each class has its own integer value
     """
 

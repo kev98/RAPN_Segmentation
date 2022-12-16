@@ -1,7 +1,5 @@
-# This script is used to set up the augmentation process for the training of the multiclass
-# segmentation; the augmentations are generally applied (each one with a probability going from 0.5 to 0.9 - to
-# introduce more variability and to fasten the training process
-
+# This script is used to set up the augmentation process for the training and testing of the multiclass
+# segmentation; one of the augmentations is generally applied with a probability of 0.3
 
 import albumentations as albu
 
@@ -17,7 +15,7 @@ def get_training_augmentation():
         albu.MotionBlur(blur_limit=3, p=1),
         albu.Blur(blur_limit=7, p=1),
         albu.MultiplicativeNoise(multiplier=(0.5, 1.5), elementwise=True, per_channel=True, p=1),
-        albu.RandomFog(p=0.8),
+        #albu.RandomFog(p=0.8),
         albu.HueSaturationValue(p=0.9),
     ]
 

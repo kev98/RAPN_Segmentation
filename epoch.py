@@ -3,13 +3,10 @@ import sys
 import numpy as np
 import torch
 from tqdm import tqdm as tqdm
-import segmentation_models_pytorch as smp
 from segmentation_models_pytorch.utils.meter import AverageValueMeter
-import torch.autograd.profiler as profiler
 
 
-# from focalLoss import FocalLoss
-
+# General class which represent an iteration of an epoch
 class Epoch:
 
     def __init__(self, model, loss, loss2, metrics, stage_name, classes, device='cpu', verbose=True):
@@ -86,6 +83,7 @@ class Epoch:
         return logs, valid_IoU, valid_DICE
 
 
+# Train epoch: : forward --> compute loss --> update model
 class TrainEpoch(Epoch):
 
     def __init__(self, model, loss, loss2, metrics, optimizer, classes, device='cpu', verbose=True):
@@ -123,6 +121,7 @@ class TrainEpoch(Epoch):
         return loss, prediction, None
 
 
+# Validation epoch: forward --> compute loss (to understand overfitting) --> compute metrics
 class ValidEpoch(Epoch):
 
     def __init__(self, model, loss, loss2, metrics, classes, device='cpu', verbose=True):
@@ -158,6 +157,7 @@ class ValidEpoch(Epoch):
             preds = torch.argmax(pred, dim=1)
             gts = torch.argmax(y, dim=1)
 
+            # Operations to compute IoU "manually"
             i = []
             u = []
             for e in range(self.num_classes):
@@ -168,5 +168,5 @@ class ValidEpoch(Epoch):
 
             IoU['intersection'] = [sum(x) for x in zip(IoU['intersection'], i)]
             IoU['union'] = [sum(x) for x in zip(IoU['union'], u)]
-        #    loss = self.loss(prediction, y)
+
         return loss, prediction, IoU

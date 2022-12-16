@@ -1,3 +1,5 @@
+# Script to compute the classes' distribution of the entire dataset
+
 import cv2
 import glob
 from alive_progress import alive_bar

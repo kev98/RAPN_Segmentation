@@ -5,13 +5,11 @@ import numpy as np
 import torch
 import pandas as pd
 import segmentation_models_pytorch as smp
-from utils.albumentation import get_training_augmentation, get_preprocessing, get_validation_augmentation
 from dataset.dataset import RAPN_Dataset
 from torch.utils.data import DataLoader
+from utils.albumentation import get_training_augmentation, get_preprocessing, get_validation_augmentation
 from utils.helper_functions import saveResults, network_stats, create_dataframe, create_testdataframe
-from utils.focalLoss import FocalLoss
 from epoch import TrainEpoch, ValidEpoch
-from utils.diceLoss import GDiceLoss, GDiceLossV2
 import matplotlib.pyplot as plt
 
 # Parse input argument
@@ -37,7 +35,7 @@ SAVE_CRITERION = config['save']
 ACTIVATION = config['activation']
 PLATFORM = config['platform']
 PROFILE = config['profile']
-LEARNING_RATE = 7e-3
+LEARNING_RATE = 7e-4
 PATIENCE = 15
 
 # Definition of the segmentation classes
@@ -150,18 +148,18 @@ def main():
 
     # LOSSES (2 losses if you want to experience with a combination of losses, otherwise just pass None)
     if LOSS == 'focal':
-        #loss = FocalLoss()
+        #loss = FocalLoss() implementation of loss previously used by Francesco's
         loss = smp.losses.FocalLoss(mode='multiclass', gamma=2)
         loss2 = None
     elif LOSS == 'dice':
-        #loss = GDiceLoss()
+        #loss = GDiceLoss() implementation of loss previously used by Francesco's
         loss = smp.losses.DiceLoss(mode='multiclass', smooth=1e-5)
         loss2 = None
     elif LOSS == "focaldice":
         loss = smp.losses.FocalLoss(mode='multiclass', gamma=2.5)
         loss2 = smp.losses.DiceLoss(mode='multiclass', smooth=1e-5)
-        #loss = FocalLoss()
-        #loss2 = GDiceLossV2()
+        #loss = FocalLoss() implementation of loss previously used by Francesco's
+        #loss2 = GDiceLossV2() implementation of loss previously used by Francesco's
 
     metrics = [
         # smp.utils.metrics.IoU(threshold=0.5),
@@ -173,7 +171,7 @@ def main():
     ])
 
     # SCHEDULER for the reduction of the learning rate when the learning stagnates
-    # namely when the train loss doesn't decrease for a fixed amount of epochs
+    # namely when the valid loss doesn't decrease for a fixed amount of epochs
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience=5, threshold=5e-4,
                                                            factor=0.2, verbose=True)
 
@@ -200,12 +198,12 @@ def main():
         classes=classes
     )
 
-    # train model for N epochs
     results_df = pd.DataFrame()
     es_counter = 0
     optimal_val_loss = 1000
     max_score = 0
 
+    # train model for N epochs
     for i in range(1, NUM_EPOCHS + 1):
 
         print('\nEpoch: {}'.format(i))
@@ -215,11 +213,10 @@ def main():
         # Run a validation epoch
         valid_logs, valid_iou, valid_dice = valid_epoch.run(valid_loader)
 
-        # Every epoch, plot the results
+        # Every epoch, compute the results and saves them into a dataframe
         if (i % 1) == 0:
             #save = True if i == NUM_EPOCHS else False
             save = False
-            # if we have the test set this has to be made on the test set only at the end
             IoU, inference_time, FBetaScore, DiceScore = saveResults(valid_loader, model, len(classes), PLATFORM,
                                                                      ENCODER, MODEL_NAME, out_dir, save_img=save)
             curr_res = create_dataframe(model, i, IoU, inference_time, FBetaScore, classes,
@@ -268,16 +265,12 @@ def main():
 
         del train_logs, valid_logs, IoU
 
-    # SCOMMENTA LE PROSSIME 4 RIGHE SE HAI IL TEST SET
+    # REMOVE COMMENTOF THE FOLLOWING 5 LINES IF YOU HAVE THE TEST SET
     test_logs, test_iou, test_dice = valid_epoch.run(test_loader)
     IoU, inference_time, FBetaScore, DiceScore = saveResults(test_loader, model, len(classes), PLATFORM, ENCODER,
                                                              MODEL_NAME, out_dir, save_img=True)
-
     curr_res = create_testdataframe(model, NUM_EPOCHS, IoU, inference_time, FBetaScore, classes, test_logs, DiceScore)
     results_df = pd.concat([results_df, curr_res])
-    #loss_values = results_df['']
-    #plt.plot(loss_values)
-    #plt.show()
 
     # Print and save plots of losses and mIoU
     fig = plt.figure()
@@ -291,7 +284,6 @@ def main():
 
     # Save excel with the training report
     results_df.to_excel(out_dir + '/' + ENCODER + '-' + MODEL_NAME + f'-{NUM_EPOCHS}' + 'ce' + '.xlsx')
-
 
 
 if __name__ == '__main__':

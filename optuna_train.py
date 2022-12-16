@@ -1,19 +1,20 @@
+"""
+Script which performs an Optuna study to choose the best hyperparameters of the model specified in the
+input parameters. Usually here the hyperparameters to evaluate are: Dropout, Activation Function, Loss Function,
+Optimizer, Learning Rate
+"""
+
 import optuna
 import os
 import argparse
 
 import numpy as np
 import torch
-import pandas as pd
 import segmentation_models_pytorch as smp
 from utils.albumentation import get_training_augmentation, get_preprocessing, get_validation_augmentation
 from dataset.dataset import RAPN_Dataset
 from torch.utils.data import DataLoader
-from utils.helper_functions import saveResults, network_stats, create_dataframe, create_testdataframe
-from utils.focalLoss import FocalLoss
 from epoch import TrainEpoch, ValidEpoch
-from utils.diceLoss import GDiceLoss
-import matplotlib.pyplot as plt
 
 # Parse input argument
 parser = argparse.ArgumentParser(description="Network for segmentation in RAPN",
@@ -125,27 +126,26 @@ def objective(trial):
     optimizer_name = trial.suggest_categorical("optimizer", ["Adam", "AdamW", "RMSprop", "SGD"])
     lr = trial.suggest_float("lr", 1e-5, 1e-1, log=True)
     optimizer = getattr(torch.optim, optimizer_name)(model.parameters(), lr=lr)
-    #optimizer = torch.optim.AdamW([
-    #    dict(params=model.parameters(), lr=LEARNING_RATE),
-    #])
 
     #Choose the loss
-    loss = trial.suggest_categorical("loss", ["focal", "dice"])
+    loss = trial.suggest_categorical("loss", ["focal", "dice", "focaldice"])
     if loss == 'focal':
         loss = smp.losses.FocalLoss(mode='multiclass', gamma=2)
         loss2 = None
     elif loss == 'dice':
         loss = smp.losses.DiceLoss(mode='multiclass', smooth=1e-5)
         loss2 = None
+    elif loss == 'focaldice':
+        loss = smp.losses.FocalLoss(mode='multiclass', gamma=2)
+        loss2= smp.losses.DiceLoss(mode='multiclass', smooth=1e-5)
     else:
         loss = None
-        loss2= None
-
+        loss2 = None
 
     # define preprocessing function
     preprocessing_fn = smp.encoders.get_preprocessing_fn('timm-mobilenetv3_large_100', ENCODER_WEIGHTS)
 
-    # TRAINING SET
+    # TRAINING SET (I recommend using only a part of it)
     train_dataset = RAPN_Dataset(
         valid_dir,
         classes=CLASSES,

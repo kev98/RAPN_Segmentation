@@ -1,11 +1,24 @@
-import os.path
+"""
+Script to prepare the RAPN100 Dataset for the semantic segmentation. The script create a new usable dataset only
+with the images useful for the Instrument Segmentation task, cropped in the rigth way
+- Step 1. Cleaning of the dataset: removal of all the images which contain only classes not useful for the segmentation
+  of the instruments (like 'Outside body', 'Ecography image, 'Color bar' etc...)
+- Step 2. Cropping of the images: compute the contours of the images, then find the biggest contour which
+  which contains classes of interest and crop it
+- Step 3. Conversion of the mask: mask are converted from RGB to one channel images, mapping each pixel to the
+  corresponding class; furthermore different instances of the same class are merged into a single class
+"""
 
+
+import os.path
 import cv2
 import glob
 from alive_progress import alive_bar
 import json
 from utils.semantic_masks import color2class
 
+
+# Function to create the directory tree of the dataset, if it's necessary
 def create_dataset_tree(source, dest):
 
     if not os.path.exists(dest):
@@ -21,6 +34,8 @@ def create_dataset_tree(source, dest):
             os.mkdir(img_path)
             os.mkdir(mask_path)
 
+
+# Function which crop the part of the image we are interested in
 def crop(img, mask, removing_color):
 
     # compute the contours and the areas of them
@@ -103,10 +118,8 @@ def main():
 
     with alive_bar(len(images)) as bar:
         for im_path, mask_path in zip(images, masks):
-            # open the image and retrieve the size
-            #im = cv2.cvtColor(cv2.imread(source_folder + "/raw_images/RAPN10/RAPN10_0124.png"), cv2.COLOR_BGR2RGB)
+            # open the image and the mask and retrieve the size
             im = cv2.cvtColor(cv2.imread(im_path), cv2.COLOR_BGR2RGB)
-            # mask = cv2.cvtColor(cv2.imread(source_folder + "/annotations/RAPN10/RAPN10_0124.png___fuse.png"), cv2.COLOR_BGR2RGB)
             mask = cv2.cvtColor(cv2.imread(mask_path), cv2.COLOR_BGR2RGB)
             width, height = mask.shape[:-1]
 

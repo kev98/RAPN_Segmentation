@@ -1,11 +1,11 @@
 import glob
 from torch.utils.data import Dataset as BaseDataset
 import cv2
+cv2.setNumThreads(0)
+cv2.ocl.setUseOpenCL(False)
 import numpy as np
 from utils.semantic_masks import binary_mask
 import json
-import os
-import time
 
 
 class RAPN_Dataset(BaseDataset):
@@ -13,7 +13,6 @@ class RAPN_Dataset(BaseDataset):
 
     Args:
         images_dir (str): path to images folder
-        masks_dir (str): path to segmentation masks folder
         classes (list): values of classes to extract from segmentation mask
         augmentation (albumentations.Compose): data transformation pipeline (e.g. flip, scale etc.)
         preprocessing (albumentations.Compose): data preprocessing (e.g. normalization, shape manipulation, etc.)
