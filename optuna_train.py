@@ -43,9 +43,9 @@ LEARNING_RATE = 1e-3
 PATIENCE = 10
 
 # Definition of the segmentation classes
-#classes = ["Background", "Instrument"]
-classes = ['Tissue', 'Force Bipolar', 'Fenestrated Bipolar Forceps', 'Prograsp Forceps', 'Monopolar Curved Scissors',
-           'Suction', 'Large Needle Driver', 'Echography']
+classes = ["Background", "Instrument"]
+#classes = ['Tissue', 'Force Bipolar', 'Fenestrated Bipolar Forceps', 'Prograsp Forceps', 'Monopolar Curved Scissors',
+#           'Suction', 'Large Needle Driver', 'Echography']
 
 #Choose the encoder and the segmentation model
 ENCODER = config['encoder']  # encoder
@@ -58,14 +58,14 @@ MODEL_NAME = config['model']  # segmentation model
 # DATA ROOT
 if PLATFORM == "server":
     DATA_DIR = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN"
-    out_dir = r"/home/kmarc/workspace/nas_private/RAPN_results/base_model/multiclass_1" + \
+    out_dir = r"/home/kmarc/workspace/nas_private/RAPN_results/base_model/binary" + \
               f"/{MODEL_NAME}{ENCODER}_bs{BATCH_SIZE}_lr{LEARNING_RATE}_{LOSS}"
     train_dir = os.path.join(DATA_DIR, 'train')
     valid_dir = os.path.join(DATA_DIR, 'val')
     test_dir = os.path.join(DATA_DIR, 'test')
 elif PLATFORM == "local":
     DATA_DIR = r"/Volumes/ORSI/Kevin/Dataset_RAPN_20procedures"
-    out_dir = r"/Users/kevinmarchesini/Desktop/Internship @ Orsi Academy/RAPN_results/multiclass/models" + \
+    out_dir = r"/Users/kevinmarchesini/Desktop/Internship @ Orsi Academy/RAPN_results/binary/models" + \
               f"/{MODEL_NAME}{ENCODER}_bs{BATCH_SIZE}_lr{LEARNING_RATE}_{LOSS}"
     train_dir = os.path.join(DATA_DIR, 'train')
     valid_dir = os.path.join(DATA_DIR, 'val')
@@ -130,13 +130,13 @@ def objective(trial):
     #Choose the loss
     loss = trial.suggest_categorical("loss", ["focal", "dice", "focaldice"])
     if loss == 'focal':
-        loss = smp.losses.FocalLoss(mode='multiclass', gamma=2)
+        loss = smp.losses.FocalLoss(mode='multiclass', gamma=2.5)
         loss2 = None
     elif loss == 'dice':
         loss = smp.losses.DiceLoss(mode='multiclass', smooth=1e-5)
         loss2 = None
     elif loss == 'focaldice':
-        loss = smp.losses.FocalLoss(mode='multiclass', gamma=2)
+        loss = smp.losses.FocalLoss(mode='multiclass', gamma=2.5)
         loss2= smp.losses.DiceLoss(mode='multiclass', smooth=1e-5)
     else:
         loss = None
@@ -162,12 +162,13 @@ def objective(trial):
     )
 
     # TRAIN AND VALIDATION LOADER
-    train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=8, drop_last=True)
-    valid_loader = DataLoader(valid_dataset, batch_size=1, shuffle=False, num_workers=8)
+    train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=4, drop_last=True)
+    valid_loader = DataLoader(valid_dataset, batch_size=1, shuffle=False, num_workers=4)
 
     # SCHEDULER for the reduction of the learning rate when the learning stagnates
     # namely when the train loss doesn't decrease for a fixed amount of epochs
-    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience=7)
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience=5, threshold=5e-4,
+                                                           factor=0.2, verbose=True)
 
     metrics = [
         # smp.utils.metrics.IoU(threshold=0.5),
@@ -221,7 +222,7 @@ def objective(trial):
 def main():
 
     study = optuna.create_study(direction="maximize")
-    study.optimize(objective, n_trials=100, timeout=226800)
+    study.optimize(objective, n_trials=2, timeout=187200)
     fig = optuna.visualization.plot_param_importances(study)
     fig.write_image('Optuna.png')
 
