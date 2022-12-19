@@ -1,6 +1,7 @@
 import glob
 from torch.utils.data import Dataset as BaseDataset
 import cv2
+# to avoid multiprocessing deadlocks
 cv2.setNumThreads(0)
 cv2.ocl.setUseOpenCL(False)
 import numpy as np
@@ -40,18 +41,22 @@ class RAPN_Dataset(BaseDataset):
             json_file = json.load(openfile)
         mapping = json_file["labels"]
         self.class_values = []
-        for cls in classes:
-            if cls == 'Tissue' or cls == 'Background':
-                self.class_values.append(0)
-                continue
-            if cls not in mapping.keys():
-                cls = cls + '_1'
-            if cls not in mapping.keys():
-                cls = cls.replace('_1', '_01')
-            try:
-                self.class_values.append(mapping[cls]["label"])
-            except KeyError as e:
-                print('I got a KeyError - Class not valid: %s'%str(e))
+        if len(classes) == 2:
+            self.class_values.append(0)
+            self.class_values.append(1)
+        else:
+            for cls in classes:
+                if cls == 'Tissue' or cls == 'Background':
+                    self.class_values.append(0)
+                    continue
+                if cls not in mapping.keys():
+                    cls = cls + '_1'
+                if cls not in mapping.keys():
+                    cls = cls.replace('_1', '_01')
+                try:
+                    self.class_values.append(mapping[cls]["label"])
+                except KeyError as e:
+                    print('I got a KeyError - Class not valid: %s'%str(e))
         print('class values: ', self.class_values)
 
         self.augmentation = augmentation
@@ -63,32 +68,33 @@ class RAPN_Dataset(BaseDataset):
         image = cv2.imread(self.images[i])
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         mask = cv2.imread(self.masks[i], 0)
-        #print('     image and mask opened')
 
         # if we want to create a dataset for binary segmentation
         if len(self.classes) == 2:
+            # set the "Inside body" class as background
+            mask[mask == 15] = 0
             mask = binary_mask(mask)
-
-        # separate the masks of the different classes and stack them
-        #print('mask shape ', mask.shape)
-        masks = [(mask == v) for v in self.class_values]
-        mask = np.stack(masks, axis=-1).astype('float')
-        sum = np.sum(mask, axis=2)
-        result = np.logical_not(np.logical_xor(sum, mask[:, :, 0])).astype('float')
-        mask[:, :, 0] = result
-        #print('     mask transformed')
+            # separate the masks of the different classes and stack them
+            masks = [(mask == v) for v in self.class_values]
+            mask = np.stack(masks, axis=-1).astype('float')
+        # if we want to create a dataset for multiclass segmentation
+        else:
+            # separate the masks of the different classes and stack them
+            masks = [(mask == v) for v in self.class_values]
+            mask = np.stack(masks, axis=-1).astype('float')
+            sum = np.sum(mask, axis=2)
+            result = np.logical_not(np.logical_xor(sum, mask[:, :, 0])).astype('float')
+            mask[:, :, 0] = result
 
         # apply augmentations
         if self.augmentation:
             sample = self.augmentation(image=image, mask=mask)
             image, mask = sample['image'], sample['mask']
-        #print('     augmentation applied')
 
         # apply preprocessing
         if self.preprocessing:
             sample = self.preprocessing(image=image, mask=mask)
             image, mask = sample['image'], sample['mask']
-        #print('     preprocessing applied')
 
         return image, mask
 
@@ -97,12 +103,16 @@ class RAPN_Dataset(BaseDataset):
 
 
 # Code to try the dataloader
-'''classes = ['Tissue', 'Force Bipolar', 'Fenestrated Bipolar Forceps', 'Prograsp Forceps', 'Monopolar Curved Scissors',
-           'Suction', 'Large Needle Driver', 'Echography']
+'''
+classes = ['Tissue', 'Force Bipolar', 'Fenestrated Bipolar Forceps', 'Prograsp Forceps', 'Monopolar Curved Scissors',
+           'Suction', 'Large Needle Driver', 'Echography', 'Inside Body']
+classes = ['Background', 'Instrument']
 dataset = RAPN_Dataset(r"/Volumes/ORSI/Kevin/Dataset_RAPN_20procedures/train", classes)
 image, mask = dataset.__getitem__(10)
+print(image.shape, mask.shape)
 for i in range(len(classes)):
-    print(i, np.count_nonzero(mask[:, :, i] == 1))'''
+    print(i, np.count_nonzero(mask[:, :, i] == 1))
+'''
 
 # Code to understand the conversion of the classes
 '''mask = np.array([[0,1,2], [1,4,5], [2,3,6]])
