@@ -104,9 +104,14 @@ class RAPN_Dataset(BaseDataset):
 
 # Code to try the dataloader
 '''
+classes = ['Background', 'Instrument']
 classes = ['Tissue', 'Force Bipolar', 'Fenestrated Bipolar Forceps', 'Prograsp Forceps', 'Monopolar Curved Scissors',
            'Suction', 'Large Needle Driver', 'Echography', 'Inside Body']
-classes = ['Background', 'Instrument']
+classes = ['Tissue', 'Monopolar Curved Scissors', 'Force Bipolar', 'Large Needle Driver', 'Suction',
+           'Suture wire', 'Hemolock Clip', 'Fenestrated Bipolar Forceps', 'Suture needle', 'Prograsp Forceps',
+           'Vessel Loop', 'Cadiere Forceps', 'Gauze', 'Bulldog clamp', 'Da Vinci trocar', 'Echography',
+           'Laparoscopic Fenestrated Forceps', 'Bulldog wire', 'Endobag', 'Veriset', 'Hemolock Clip Applier',
+           'Laparoscopic Needle Driver']
 dataset = RAPN_Dataset(r"/Volumes/ORSI/Kevin/Dataset_RAPN_20procedures/train", classes)
 image, mask = dataset.__getitem__(10)
 print(image.shape, mask.shape)

@@ -43,9 +43,14 @@ LEARNING_RATE = 1e-3
 PATIENCE = 10
 
 # Definition of the segmentation classes
-classes = ["Background", "Instrument"]
-#classes = ['Tissue', 'Force Bipolar', 'Fenestrated Bipolar Forceps', 'Prograsp Forceps', 'Monopolar Curved Scissors',
+#classes = ["Background", "Instrument"]
+#classes = ['Tissue', 'Force Bipolar', 'Fenestrated Bipolar Forceps', 'Prograsp Forceps', 'Monopolar Curved Scissors',#
 #           'Suction', 'Large Needle Driver', 'Echography']
+classes = ['Tissue', 'Monopolar Curved Scissors', 'Force Bipolar', 'Large Needle Driver', 'Suction',
+           'Suture wire', 'Hemolock clip', 'Fenestrated Bipolar Forceps', 'Suture needle', 'Prograsp Forceps',
+           'Vessel loop', 'Cadiere forceps', 'Gauze', 'Bulldog clamp', 'Da Vinci trocar', 'Echography',
+           'Laparoscopic Fenestrated Forceps', 'Bulldog wire', 'Endobag', 'Veriset', 'Hemolock Clip Applier',
+           'Laparoscopic Needle Driver']
 
 #Choose the encoder and the segmentation model
 ENCODER = config['encoder']  # encoder
@@ -58,7 +63,7 @@ MODEL_NAME = config['model']  # segmentation model
 # DATA ROOT
 if PLATFORM == "server":
     DATA_DIR = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN"
-    out_dir = r"/home/kmarc/workspace/nas_private/RAPN_results/base_model/binary" + \
+    out_dir = r"/home/kmarc/workspace/nas_private/RAPN_results/base_model/multiclass_all" + \
               f"/{MODEL_NAME}{ENCODER}_bs{BATCH_SIZE}_lr{LEARNING_RATE}_{LOSS}"
     train_dir = os.path.join(DATA_DIR, 'train')
     valid_dir = os.path.join(DATA_DIR, 'val')
