@@ -47,8 +47,8 @@ PATIENCE = 10
 #classes = ['Tissue', 'Force Bipolar', 'Fenestrated Bipolar Forceps', 'Prograsp Forceps', 'Monopolar Curved Scissors',#
 #           'Suction', 'Large Needle Driver', 'Echography']
 classes = ['Tissue', 'Monopolar Curved Scissors', 'Force Bipolar', 'Large Needle Driver', 'Suction',
-           'Suture wire', 'Hemolock clip', 'Fenestrated Bipolar Forceps', 'Suture needle', 'Prograsp Forceps',
-           'Vessel loop', 'Cadiere forceps', 'Gauze', 'Bulldog clamp', 'Da Vinci trocar', 'Echography',
+           'Suture wire', 'Hemolock Clip', 'Fenestrated Bipolar Forceps', 'Suture needle', 'Prograsp Forceps',
+           'Vessel Loop', 'Cadiere Forceps', 'Gauze', 'Bulldog clamp', 'Da Vinci trocar', 'Echography',
            'Laparoscopic Fenestrated Forceps', 'Bulldog wire', 'Endobag', 'Veriset', 'Hemolock Clip Applier',
            'Laparoscopic Needle Driver']
 
