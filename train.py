@@ -35,13 +35,13 @@ SAVE_CRITERION = config['save']
 ACTIVATION = config['activation']
 PLATFORM = config['platform']
 PROFILE = config['profile']
-LEARNING_RATE = 7e-4
+LEARNING_RATE = 3e-4
 PATIENCE = 15
 
 # Definition of the segmentation classes
-#classes = ["Background", "Instrument"]
-classes = ['Tissue', 'Force Bipolar', 'Fenestrated Bipolar Forceps', 'Prograsp Forceps', 'Monopolar Curved Scissors',
-           'Suction', 'Large Needle Driver', 'Echography']
+classes = ["Background", "Instrument"]
+#classes = ['Tissue', 'Force Bipolar', 'Fenestrated Bipolar Forceps', 'Prograsp Forceps', 'Monopolar Curved Scissors',
+#           'Suction', 'Large Needle Driver', 'Echography']
 
 #Choose the encoder and the segmentation model
 ENCODER = config['encoder']  # encoder
@@ -54,7 +54,7 @@ MODEL_NAME = config['model']  # segmentation model
 # DATA ROOT
 if PLATFORM == "server":
     DATA_DIR = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN"
-    out_dir = r"/home/kmarc/workspace/nas_private/RAPN_results/base_model/multiclass_1" + \
+    out_dir = r"/home/kmarc/workspace/nas_private/RAPN_results/base_model/binary" + \
               f"/{MODEL_NAME}{ENCODER}_bs{BATCH_SIZE}_lr{LEARNING_RATE}_{LOSS}"
     train_dir = os.path.join(DATA_DIR, 'train')
     valid_dir = os.path.join(DATA_DIR, 'val')
@@ -79,7 +79,7 @@ def main():
             encoder_weights=ENCODER_WEIGHTS,
             classes=len(classes),
             activation=ACTIVATION,
-            aux_params={'classes':8, 'dropout':0.4}
+            aux_params={'classes':2, 'dropout':0.45}
         )
     elif MODEL_NAME == 'DeepLabV3+':
         model = smp.DeepLabV3Plus(
@@ -87,7 +87,8 @@ def main():
             encoder_weights=ENCODER_WEIGHTS,
             encoder_output_stride=16,
             classes=len(classes),
-            activation=ACTIVATION
+            activation=ACTIVATION,
+            aux_params={'classes':2, 'dropout':0.45}
         )
     elif MODEL_NAME == 'Unet++':
         model = smp.UnetPlusPlus(
@@ -95,7 +96,8 @@ def main():
             encoder_weights=ENCODER_WEIGHTS,
             decoder_channels=[256, 128, 64, 32, 16],
             classes=len(classes),
-            activation=ACTIVATION
+            activation=ACTIVATION,
+            aux_params={'classes':2, 'dropout':0.45}
         )
     else:
         model = None
@@ -149,7 +151,7 @@ def main():
     # LOSSES (2 losses if you want to experience with a combination of losses, otherwise just pass None)
     if LOSS == 'focal':
         #loss = FocalLoss() implementation of loss previously used by Francesco's
-        loss = smp.losses.FocalLoss(mode='multiclass', gamma=2)
+        loss = smp.losses.FocalLoss(mode='multiclass', gamma=2.5)
         loss2 = None
     elif LOSS == 'dice':
         #loss = GDiceLoss() implementation of loss previously used by Francesco's
@@ -166,14 +168,14 @@ def main():
     ]
 
     # OPTIMIZER (you can set here the starting learning rate)
-    optimizer = torch.optim.AdamW([
+    optimizer = torch.optim.RMSprop([
         dict(params=model.parameters(), lr=LEARNING_RATE),
     ])
 
     # SCHEDULER for the reduction of the learning rate when the learning stagnates
     # namely when the valid loss doesn't decrease for a fixed amount of epochs
-    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience=5, threshold=5e-4,
-                                                           factor=0.2, verbose=True)
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience=5, threshold=2e-4,
+                                                           factor=0.3, verbose=True)
 
     # create epoch runners
     # it is a simple loop of iterating over dataloader`s samples

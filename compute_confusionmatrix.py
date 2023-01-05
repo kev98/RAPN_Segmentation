@@ -92,7 +92,8 @@ def main():
             encoder_weights=ENCODER_WEIGHTS,
             encoder_output_stride=16,
             classes=len(classes),
-            activation=ACTIVATION
+            activation=ACTIVATION,
+            aux_params={'classes':8, 'dropout':0.42}
         )
     elif MODEL_NAME == 'Unet++':
         model = smp.UnetPlusPlus(
@@ -107,7 +108,7 @@ def main():
 
     # define preprocessing function
     preprocessing_fn = smp.encoders.get_preprocessing_fn('timm-mobilenetv3_large_100', ENCODER_WEIGHTS)
-    model.load_state_dict(torch.load("/home/kmarc/workspace/nas_private/RAPN_results/base_model/multiclass_1/DeepLabV3+tu-efficientnetv2_rw_s_bs8_lr0.001_focal/tu-efficientnetv2_rw_s-DeepLabV3+-30ce.pth"))
+    model.load_state_dict(torch.load("/home/kmarc/workspace/nas_private/RAPN_results/base_model/multiclass_1/DeepLabV3+tu-efficientnet_b4_bs8_lr0.0007_focal/tu-efficientnet_b4-DeepLabV3+-30ce.pth"))
     model.to(DEVICE)
     model.eval()
 
@@ -142,7 +143,13 @@ def main():
     with tqdm(valid_loader, desc='valid', file=sys.stdout) as iterator:
         for x, y in iterator:
 
-            prediction = model(x.to(DEVICE)).detach().cpu()
+            prediction = model(x.to(DEVICE))
+            
+            if type(prediction) is tuple:
+                prediction = prediction[0]
+
+            prediction= prediction.detach().cpu()
+            
             target = torch.argmax(y, dim=1)
             confusion = confmat(prediction, target).float().numpy()
 
@@ -193,7 +200,13 @@ def main():
     with tqdm(test_loader, desc='test', file=sys.stdout) as iterator:
         for x, y in iterator:
 
-            prediction = model(x.to(DEVICE)).detach().cpu()
+            prediction = model(x.to(DEVICE))
+
+            if type(prediction) is tuple:
+                prediction = prediction[0]
+
+            prediction= prediction.detach().cpu()
+
             target = torch.argmax(y, dim=1)
             confusion = confmat(prediction, target).float().numpy()
 
