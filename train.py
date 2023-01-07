@@ -35,13 +35,18 @@ SAVE_CRITERION = config['save']
 ACTIVATION = config['activation']
 PLATFORM = config['platform']
 PROFILE = config['profile']
-LEARNING_RATE = 3e-4
+LEARNING_RATE = 1e-3
 PATIENCE = 15
 
 # Definition of the segmentation classes
-classes = ["Background", "Instrument"]
+#classes = ["Background", "Instrument"]
 #classes = ['Tissue', 'Force Bipolar', 'Fenestrated Bipolar Forceps', 'Prograsp Forceps', 'Monopolar Curved Scissors',
 #           'Suction', 'Large Needle Driver', 'Echography']
+classes = ['Tissue', 'Monopolar Curved Scissors', 'Force Bipolar', 'Large Needle Driver', 'Suction',
+           'Suture wire', 'Hemolock Clip', 'Fenestrated Bipolar Forceps', 'Suture needle', 'Prograsp Forceps',
+           'Vessel Loop', 'Cadiere Forceps', 'Gauze', 'Bulldog clamp', 'Da Vinci trocar', 'Echography',
+           'Laparoscopic Fenestrated Forceps', 'Bulldog wire', 'Endobag', 'Veriset', 'Hemolock Clip Applier',
+           'Laparoscopic Needle Driver']
 
 #Choose the encoder and the segmentation model
 ENCODER = config['encoder']  # encoder
@@ -79,7 +84,7 @@ def main():
             encoder_weights=ENCODER_WEIGHTS,
             classes=len(classes),
             activation=ACTIVATION,
-            aux_params={'classes':2, 'dropout':0.45}
+            aux_params={'classes': len(classes), 'dropout': 0.3}
         )
     elif MODEL_NAME == 'DeepLabV3+':
         model = smp.DeepLabV3Plus(
@@ -88,7 +93,7 @@ def main():
             encoder_output_stride=16,
             classes=len(classes),
             activation=ACTIVATION,
-            aux_params={'classes':2, 'dropout':0.45}
+            aux_params={'classes': len(classes), 'dropout': 0.3}
         )
     elif MODEL_NAME == 'Unet++':
         model = smp.UnetPlusPlus(
@@ -97,7 +102,7 @@ def main():
             decoder_channels=[256, 128, 64, 32, 16],
             classes=len(classes),
             activation=ACTIVATION,
-            aux_params={'classes':2, 'dropout':0.45}
+            aux_params={'classes': len(classes), 'dropout': 0.3}
         )
     else:
         model = None
