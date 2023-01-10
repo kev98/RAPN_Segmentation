@@ -376,6 +376,10 @@
         "Vessel Sealer Extend": {
             "label": 34,
             "color": "#29a2bb"
+        },
+        "Other instruments": {
+            "label": 40,
+            "color": "#ffffff"
         }
     }
 }

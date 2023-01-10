@@ -36,7 +36,7 @@ class RAPN_Dataset(BaseDataset):
 
         # convert str names to class values on masks, using the "config.json" file
         self.classes = classes
-        with open("config_files/config.json", 'r') as openfile:
+        with open("../config_files/config.json", 'r') as openfile:
             # Reading from json file
             json_file = json.load(openfile)
         mapping = json_file["labels"]
@@ -46,6 +46,8 @@ class RAPN_Dataset(BaseDataset):
             self.class_values.append(1)
         else:
             for cls in classes:
+                if cls == 'Other instruments':
+                    continue
                 if cls == 'Tissue' or cls == 'Background':
                     self.class_values.append(0)
                     continue
@@ -59,6 +61,15 @@ class RAPN_Dataset(BaseDataset):
                     print('I got a KeyError - Class not valid: %s'%str(e))
         print('class values: ', self.class_values)
 
+        # List of instruments to be annotated as "Other instruments" (not always necessary)
+        self.other_instruments = []
+        self.other_label = json_file['classes'] + 1
+        # N.B. in any case "Other instruments" class must be the last one of the self.classes list
+        if self.classes[-1] == 'Other instruments':
+            for i in range(1, self.other_label):
+                if i not in self.class_values:
+                    self.other_instruments.append(i)
+
         self.augmentation = augmentation
         self.preprocessing = preprocessing
 
@@ -68,6 +79,13 @@ class RAPN_Dataset(BaseDataset):
         image = cv2.imread(self.images[i])
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         mask = cv2.imread(self.masks[i], 0)
+
+        # if we need the class "Other instruments"
+        # N.B. in any case "Other instruments" class must be the last one of the self.classes list
+        if self.classes[-1] == 'Other instruments':
+            for oth in self.other_instruments:
+                mask[mask == oth] = self.other_label
+            self.class_values.append(self.other_label)
 
         # if we want to create a dataset for binary segmentation
         if len(self.classes) == 2:
@@ -103,8 +121,8 @@ class RAPN_Dataset(BaseDataset):
 
 
 # Code to try the dataloader
-'''
-classes = ['Background', 'Instrument']
+
+'''classes = ['Background', 'Instrument']
 classes = ['Tissue', 'Force Bipolar', 'Fenestrated Bipolar Forceps', 'Prograsp Forceps', 'Monopolar Curved Scissors',
            'Suction', 'Large Needle Driver', 'Echography', 'Inside Body']
 classes = ['Tissue', 'Monopolar Curved Scissors', 'Force Bipolar', 'Large Needle Driver', 'Suction',
@@ -112,12 +130,17 @@ classes = ['Tissue', 'Monopolar Curved Scissors', 'Force Bipolar', 'Large Needle
            'Vessel Loop', 'Cadiere Forceps', 'Gauze', 'Bulldog clamp', 'Da Vinci trocar', 'Echography',
            'Laparoscopic Fenestrated Forceps', 'Bulldog wire', 'Endobag', 'Veriset', 'Hemolock Clip Applier',
            'Laparoscopic Needle Driver']
+classes = ['Tissue', 'Monopolar Curved Scissors', 'Force Bipolar', 'Large Needle Driver', 'Suction',
+           'Suture wire', 'Hemolock Clip', 'Fenestrated Bipolar Forceps', 'Suture needle', 'Prograsp Forceps',
+           'Vessel Loop', 'Cadiere Forceps', 'Gauze', 'Bulldog clamp', 'Da Vinci trocar', 'Echography',
+           'Laparoscopic Fenestrated Forceps', 'Bulldog wire', 'Endobag', 'Veriset', 'Hemolock Clip Applier',
+           'Laparoscopic Needle Driver', 'Other instruments']
 dataset = RAPN_Dataset(r"/Volumes/ORSI/Kevin/Dataset_RAPN_20procedures/train", classes)
 image, mask = dataset.__getitem__(10)
 print(image.shape, mask.shape)
 for i in range(len(classes)):
-    print(i, np.count_nonzero(mask[:, :, i] == 1))
-'''
+    print(i, np.count_nonzero(mask[:, :, i] == 1))'''
+
 
 # Code to understand the conversion of the classes
 '''mask = np.array([[0,1,2], [1,4,5], [2,3,6]])
