@@ -36,7 +36,7 @@ class RAPN_Dataset(BaseDataset):
 
         # convert str names to class values on masks, using the "config.json" file
         self.classes = classes
-        with open("../config_files/config.json", 'r') as openfile:
+        with open("config_files/config.json", 'r') as openfile:
             # Reading from json file
             json_file = json.load(openfile)
         mapping = json_file["labels"]
