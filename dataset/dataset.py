@@ -41,13 +41,14 @@ class RAPN_Dataset(BaseDataset):
             json_file = json.load(openfile)
         mapping = json_file["labels"]
         self.class_values = []
+        self.other_label = json_file['classes'] + 1
         if len(classes) == 2:
             self.class_values.append(0)
             self.class_values.append(1)
         else:
             for cls in classes:
                 if cls == 'Other instruments':
-                    continue
+                    self.class_values.append(self.other_label)
                 if cls == 'Tissue' or cls == 'Background':
                     self.class_values.append(0)
                     continue
@@ -63,7 +64,6 @@ class RAPN_Dataset(BaseDataset):
 
         # List of instruments to be annotated as "Other instruments" (not always necessary)
         self.other_instruments = []
-        self.other_label = json_file['classes'] + 1
         # N.B. in any case "Other instruments" class must be the last one of the self.classes list
         if self.classes[-1] == 'Other instruments':
             for i in range(1, self.other_label):
@@ -85,7 +85,6 @@ class RAPN_Dataset(BaseDataset):
         if self.classes[-1] == 'Other instruments':
             for oth in self.other_instruments:
                 mask[mask == oth] = self.other_label
-            self.class_values.append(self.other_label)
 
         # if we want to create a dataset for binary segmentation
         if len(self.classes) == 2:
