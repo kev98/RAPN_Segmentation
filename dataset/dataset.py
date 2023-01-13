@@ -49,6 +49,7 @@ class RAPN_Dataset(BaseDataset):
             for cls in classes:
                 if cls == 'Other instruments':
                     self.class_values.append(self.other_label)
+                    continue
                 if cls == 'Tissue' or cls == 'Background':
                     self.class_values.append(0)
                     continue

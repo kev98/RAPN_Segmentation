@@ -35,18 +35,25 @@ SAVE_CRITERION = config['save']
 ACTIVATION = config['activation']
 PLATFORM = config['platform']
 PROFILE = config['profile']
-LEARNING_RATE = 1e-3
+LEARNING_RATE = 3e-4
 PATIENCE = 15
 
 # Definition of the segmentation classes
 #classes = ["Background", "Instrument"]
 #classes = ['Tissue', 'Force Bipolar', 'Fenestrated Bipolar Forceps', 'Prograsp Forceps', 'Monopolar Curved Scissors',
 #           'Suction', 'Large Needle Driver', 'Echography']
+#classes = ['Tissue', 'Monopolar Curved Scissors', 'Force Bipolar', 'Large Needle Driver', 'Suction',
+#           'Suture wire', 'Hemolock Clip', 'Fenestrated Bipolar Forceps', 'Suture needle', 'Prograsp Forceps',
+#           'Vessel Loop', 'Cadiere Forceps', 'Gauze', 'Bulldog clamp', 'Da Vinci trocar', 'Echography',
+#           'Laparoscopic Fenestrated Forceps', 'Bulldog wire', 'Endobag', 'Veriset', 'Hemolock Clip Applier',
+#           'Laparoscopic Needle Driver']
 classes = ['Tissue', 'Monopolar Curved Scissors', 'Force Bipolar', 'Large Needle Driver', 'Suction',
            'Suture wire', 'Hemolock Clip', 'Fenestrated Bipolar Forceps', 'Suture needle', 'Prograsp Forceps',
            'Vessel Loop', 'Cadiere Forceps', 'Gauze', 'Bulldog clamp', 'Da Vinci trocar', 'Echography',
            'Laparoscopic Fenestrated Forceps', 'Bulldog wire', 'Endobag', 'Veriset', 'Hemolock Clip Applier',
-           'Laparoscopic Needle Driver']
+           'Laparoscopic Needle Driver', 'Other instruments']
+#classes = ['Tissue', 'Monopolar Curved Scissors', 'Hemolock Clip', 'Fenestrated Bipolar Forceps', 'Suction', 'Large Needle Driver', 'Suture wire',
+#                    'Vessel Loop', 'Suture needle', 'Bulldog clamp', 'Echography', 'Laparoscopic Clip Applier', 'Gauze', 'Endobag']
 
 #Choose the encoder and the segmentation model
 ENCODER = config['encoder']  # encoder
@@ -59,7 +66,7 @@ MODEL_NAME = config['model']  # segmentation model
 # DATA ROOT
 if PLATFORM == "server":
     DATA_DIR = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN"
-    out_dir = r"/home/kmarc/workspace/nas_private/RAPN_results/base_model/binary" + \
+    out_dir = r"/home/kmarc/workspace/nas_private/RAPN_results/base_model/multiclass_all" + \
               f"/{MODEL_NAME}{ENCODER}_bs{BATCH_SIZE}_lr{LEARNING_RATE}_{LOSS}"
     train_dir = os.path.join(DATA_DIR, 'train')
     valid_dir = os.path.join(DATA_DIR, 'val')
@@ -84,7 +91,7 @@ def main():
             encoder_weights=ENCODER_WEIGHTS,
             classes=len(classes),
             activation=ACTIVATION,
-            aux_params={'classes': len(classes), 'dropout': 0.3}
+            aux_params={'classes': len(classes), 'dropout': 0.38}
         )
     elif MODEL_NAME == 'DeepLabV3+':
         model = smp.DeepLabV3Plus(
@@ -93,7 +100,7 @@ def main():
             encoder_output_stride=16,
             classes=len(classes),
             activation=ACTIVATION,
-            aux_params={'classes': len(classes), 'dropout': 0.3}
+            aux_params={'classes': len(classes), 'dropout': 0.38}
         )
     elif MODEL_NAME == 'Unet++':
         model = smp.UnetPlusPlus(
@@ -102,14 +109,15 @@ def main():
             decoder_channels=[256, 128, 64, 32, 16],
             classes=len(classes),
             activation=ACTIVATION,
-            aux_params={'classes': len(classes), 'dropout': 0.3}
+            aux_params={'classes': len(classes), 'dropout': 0.38}
         )
     else:
         model = None
 
     # define preprocessing function
+    #preprocessing_fn = smp.encoders.get_preprocessing_fn(ENCODER, ENCODER_WEIGHTS)
     preprocessing_fn = smp.encoders.get_preprocessing_fn('timm-mobilenetv3_large_100', ENCODER_WEIGHTS)
-    #model.load_state_dict(torch.load("/home/kmarc/workspace/nas_private/RAPN_results/base_model/multiclass_1/UNet++tu-efficientnetv2_rw_s_bs16_lr0.001_focal/tu-efficientnetv2_rw_s-UNet++-30ce.pth"))
+    #model.load_state_dict(torch.load("/home/kmarc/workspace/nas_private/RAPN_results/base_model/Francesco_model/tu-efficientnetv2_rw_s-FPN_14cl.pth"))
     model.to(DEVICE)
 
     # Get information about model
@@ -173,13 +181,13 @@ def main():
     ]
 
     # OPTIMIZER (you can set here the starting learning rate)
-    optimizer = torch.optim.RMSprop([
+    optimizer = torch.optim.AdamW([
         dict(params=model.parameters(), lr=LEARNING_RATE),
     ])
 
     # SCHEDULER for the reduction of the learning rate when the learning stagnates
     # namely when the valid loss doesn't decrease for a fixed amount of epochs
-    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience=5, threshold=2e-4,
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience=5, threshold=1e-4,
                                                            factor=0.3, verbose=True)
 
     # create epoch runners
@@ -275,7 +283,7 @@ def main():
     # REMOVE COMMENTOF THE FOLLOWING 5 LINES IF YOU HAVE THE TEST SET
     test_logs, test_iou, test_dice = valid_epoch.run(test_loader)
     IoU, inference_time, FBetaScore, DiceScore = saveResults(test_loader, model, len(classes), PLATFORM, ENCODER,
-                                                             MODEL_NAME, out_dir, save_img=True)
+                                                             MODEL_NAME, out_dir, save_img=False)
     curr_res = create_testdataframe(model, NUM_EPOCHS, IoU, inference_time, FBetaScore, classes, test_logs, DiceScore)
     results_df = pd.concat([results_df, curr_res])
 
