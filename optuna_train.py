@@ -50,7 +50,7 @@ classes = ['Tissue', 'Monopolar Curved Scissors', 'Force Bipolar', 'Large Needle
            'Suture wire', 'Hemolock Clip', 'Fenestrated Bipolar Forceps', 'Suture needle', 'Prograsp Forceps',
            'Vessel Loop', 'Cadiere Forceps', 'Gauze', 'Bulldog clamp', 'Da Vinci trocar', 'Echography',
            'Laparoscopic Fenestrated Forceps', 'Bulldog wire', 'Endobag', 'Veriset', 'Hemolock Clip Applier',
-           'Laparoscopic Needle Driver']
+           'Laparoscopic Needle Driver', 'Other instruments']
 
 #Choose the encoder and the segmentation model
 ENCODER = config['encoder']  # encoder
@@ -227,7 +227,7 @@ def objective(trial):
 def main():
 
     study = optuna.create_study(direction="maximize")
-    study.optimize(objective, n_trials=100, timeout=198000)
+    study.optimize(objective, n_trials=100, timeout=200000)
     fig = optuna.visualization.plot_param_importances(study)
     fig.write_image('Optuna.png')
 

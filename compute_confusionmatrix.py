@@ -47,8 +47,13 @@ PATIENCE = 10
 
 # Definition of the segmentation classes
 #classes = ["Background", "Instrument"]
-classes = ['Tissue', 'Force Bipolar', 'Fenestrated Bipolar Forceps', 'Prograsp Forceps', 'Monopolar Curved Scissors',
-           'Suction', 'Large Needle Driver', 'Echography']
+#classes = ['Tissue', 'Force Bipolar', 'Fenestrated Bipolar Forceps', 'Prograsp Forceps', 'Monopolar Curved Scissors',
+#           'Suction', 'Large Needle Driver', 'Echography']
+classes = ['Tissue', 'Monopolar Curved Scissors', 'Force Bipolar', 'Large Needle Driver', 'Suction',
+           'Suture wire', 'Hemolock Clip', 'Fenestrated Bipolar Forceps', 'Suture needle', 'Prograsp Forceps',
+           'Vessel Loop', 'Cadiere Forceps', 'Gauze', 'Bulldog clamp', 'Da Vinci trocar', 'Echography',
+           'Laparoscopic Fenestrated Forceps', 'Bulldog wire', 'Endobag', 'Veriset', 'Hemolock Clip Applier',
+           'Laparoscopic Needle Driver', 'Other instruments']
 
 #Choose the encoder and the segmentation model
 ENCODER = config['encoder']  # encoder
@@ -61,7 +66,7 @@ MODEL_NAME = config['model']  # segmentation model
 # DATA ROOT
 if PLATFORM == "server":
     DATA_DIR = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN"
-    out_dir = r"/home/kmarc/workspace/nas_private/RAPN_results/base_model/multiclass_1"
+    out_dir = r"/home/kmarc/workspace/nas_private/RAPN_results/base_model/multiclass_all"
     train_dir = os.path.join(DATA_DIR, 'train')
     valid_dir = os.path.join(DATA_DIR, 'val')
     test_dir = os.path.join(DATA_DIR, 'test')
@@ -84,6 +89,7 @@ def main():
             encoder_weights=ENCODER_WEIGHTS,
             classes=len(classes),
             activation=ACTIVATION,
+            aux_params={'classes':len(classes), 'dropout':0.38}
             # aux_params= classification_params
         )
     elif MODEL_NAME == 'DeepLabV3+':
@@ -93,7 +99,7 @@ def main():
             encoder_output_stride=16,
             classes=len(classes),
             activation=ACTIVATION,
-            aux_params={'classes':8, 'dropout':0.42}
+            aux_params={'classes':len(classes), 'dropout':0.38}
         )
     elif MODEL_NAME == 'Unet++':
         model = smp.UnetPlusPlus(
@@ -108,7 +114,7 @@ def main():
 
     # define preprocessing function
     preprocessing_fn = smp.encoders.get_preprocessing_fn('timm-mobilenetv3_large_100', ENCODER_WEIGHTS)
-    model.load_state_dict(torch.load("/home/kmarc/workspace/nas_private/RAPN_results/base_model/multiclass_1/DeepLabV3+tu-efficientnet_b4_bs8_lr0.0007_focal/tu-efficientnet_b4-DeepLabV3+-30ce.pth"))
+    model.load_state_dict(torch.load("/home/kmarc/workspace/nas_private/RAPN_results/base_model/multiclass_all/FPNtu-efficientnetv2_rw_s_bs16_lr0.0003_focaldice_othclasses/tu-efficientnetv2_rw_s-FPN-30ce.pth"))
     model.to(DEVICE)
     model.eval()
 
@@ -134,7 +140,7 @@ def main():
     valid_loader = DataLoader(valid_dataset, batch_size=1, shuffle=False, num_workers=4)
     test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False, num_workers=4)
 
-    confmat = ConfusionMatrix(task="multiclass", num_classes=8)
+    confmat = ConfusionMatrix(task="multiclass", num_classes=len(classes))
 
     # CONFUSION MATRIX COMPUTATION ON THE VALIDATION SET
     total_confusion = np.zeros((len(classes), len(classes)))
@@ -186,7 +192,7 @@ def main():
             total_confusion[idx] = total_confusion[idx]/c
             d[classes[idx]] = list(total_confusion[idx])
         else:
-            d[classes[idx]] = list(np.zeros(8))
+            d[classes[idx]] = list(np.zeros(len(classes)))
 
     df = pd.DataFrame(d, index=classes, columns=classes)
     df = df.transpose()
@@ -227,7 +233,7 @@ def main():
             total_confusion[idx] = total_confusion[idx]/c
             d[classes[idx]] = list(total_confusion[idx])
         else:
-            d[classes[idx]] = list(np.zeros(8))
+            d[classes[idx]] = list(np.zeros(len(classes)))
 
     df = pd.DataFrame(d, index=classes, columns=classes)
     df = df.transpose()
