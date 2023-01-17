@@ -76,11 +76,14 @@ def main():
     # Specify the input folder and the output folder
     source_folder = r"/home/kmarc/workspace/nas_private/samples"
     #source_folder = "/Volumes/ORSI/Kevin/samples"
-    #dest_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN"
-    dest_folder = "/Volumes/ORSI/Kevin/video_dataset"
-    train_folder = "/Volumes/ORSI/Kevin/RAPN100/train"
-    valid_folder = "/Volumes/ORSI/Kevin/RAPN100/val"
-    test_folder =  "/Volumes/ORSI/Kevin/RAPN100/test"
+    dest_folder = r"/home/kmarc/workspace/nas_private/Video_Segmentation_Dataset_RAPN"
+    #dest_folder = "/Volumes/ORSI/Kevin/video_dataset"
+    train_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN/train"
+    valid_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN/val"
+    test_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN/test"
+    #train_folder = "/Volumes/ORSI/Kevin/RAPN100/train"
+    #valid_folder = "/Volumes/ORSI/Kevin/RAPN100/val"
+    #test_folder =  "/Volumes/ORSI/Kevin/RAPN100/test"
     create_dataset_tree(source_folder, dest_folder)
 
     train_proc = os.listdir(os.path.join(train_folder, 'raw_images'))
