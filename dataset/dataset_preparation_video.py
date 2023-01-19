@@ -175,6 +175,9 @@ def main():
                         # loop over the frame between the previous and the current frame of the RAPN100
                         for frame_path in list_frames:
                             frame_path = os.path.join(source_folder, p, frame_path)
+                            if not os.path.isfile(frame_path):
+                                sequence = []
+                                break
                             frame = cv2.cvtColor(cv2.imread(frame_path), cv2.COLOR_BGR2RGB)
                             # check if the image is similar to the "current one" of the RAPN100 dataset
                             # and crop it properly
