@@ -9,7 +9,6 @@ with the images useful for the Instrument Segmentation task, cropped in the rigt
   corresponding class; furthermore different instances of the same class are merged into a single class
 """
 
-
 import os.path
 import cv2
 import glob
@@ -20,7 +19,6 @@ from utils.semantic_masks import color2class
 
 # Function to create the directory tree of the dataset, if it's necessary
 def create_dataset_tree(source, dest):
-
     if not os.path.exists(dest):
         os.mkdir(dest)
         os.mkdir(os.path.join(dest, 'raw_images'))
@@ -37,10 +35,9 @@ def create_dataset_tree(source, dest):
 
 # Function which crop the part of the image we are interested in
 def crop(img, mask, removing_color):
-
     # compute the contours and the areas of them
-    gray = cv2.cvtColor(img,cv2.COLOR_RGB2GRAY)
-    _, thresh = cv2.threshold(gray,10,255,cv2.THRESH_BINARY)
+    gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+    _, thresh = cv2.threshold(gray, 10, 255, cv2.THRESH_BINARY)
     contours, hierarchy = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2:]
     areas = [cv2.contourArea(c) for c in contours]
 
@@ -68,21 +65,20 @@ def crop(img, mask, removing_color):
                     count += 1
 
         # if the bounding box considered contains mainly classes we are interested in
-        if count < 0.5*height*width:
+        if count < 0.5 * height * width:
             break
 
-    #cv2.imshow('image', img_crop)
-    #cv2.waitKey(0)
+    # cv2.imshow('image', img_crop)
+    # cv2.waitKey(0)
 
     return img_crop, mask_crop
 
 
 def main():
-
     # Specify the input folder and the output folder
-    source_folder = r"/home/kmarc/workspace/nas_private/RAPN100"
-    dest_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN"
-    create_dataset_tree(source_folder, dest_folder)
+    source_folder = r"/home/kmarc/workspace/nas_private/new_images"
+    dest_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN/train"
+    #create_dataset_tree(source_folder, dest_folder)
 
     # create a color mapping reading the JSON file
     json_path = '../classes.json'
@@ -133,7 +129,7 @@ def main():
                     if color not in removing_color:
                         remove_image = False
             removing_color.remove('#000000')
-            
+
             # crop the image and the mask and save them
             if not remove_image:
                 print(im_path)
@@ -146,11 +142,10 @@ def main():
                 mask_cropped = color2class(mask_cropped, class_mapping)
                 mask_path = im_path.replace('raw_images', 'masks')
                 cv2.imwrite(mask_path, cv2.cvtColor(mask_cropped, cv2.COLOR_BGR2RGB))
-                
+
             # Update the progress bar
             bar()
 
 
 if __name__ == '__main__':
-
     main()
