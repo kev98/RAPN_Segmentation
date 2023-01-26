@@ -29,9 +29,9 @@ def computeIoU(predictions, targets, num_classes):
 def computeFBetaScore(predictions, targets, num_classes):
 
     if num_classes == 2:
-        metric = BinaryFBetaScore(beta=2.0)
+        metric = BinaryFBetaScore(beta=1.0)
     else:
-        metric = MulticlassFBetaScore(beta=2.0, num_classes=num_classes, average=None)
+        metric = MulticlassFBetaScore(beta=1.0, num_classes=num_classes, average=None)
 
     return metric(torch.tensor(np.array(predictions)), torch.tensor(np.array(targets)))
 
