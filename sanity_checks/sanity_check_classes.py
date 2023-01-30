@@ -1,6 +1,9 @@
 import os
 import argparse
-
+import sys
+current = os.path.dirname(os.path.realpath(__file__))
+parent = os.path.dirname(current)
+sys.path.append(parent)
 import numpy as np
 import torch
 import pandas as pd
@@ -28,7 +31,7 @@ PATIENCE = 15
 #classes = ["Background", "Instrument"]
 classes = ['Tissue', 'Force Bipolar', 'Fenestrated Bipolar Forceps', 'Prograsp Forceps', 'Monopolar Curved Scissors',
            'Suction', 'Large Needle Driver', 'Echography']
-iou_th = [0.85, 0.7, 0.7, 0, 0.75, 0.7, 0.6, 0.7]
+iou_th = [0.7, 0.3, 0.3, 0, 0.3, 0.3, 0.3, 0.3]
 #classes = ['Tissue', 'Monopolar Curved Scissors', 'Force Bipolar', 'Large Needle Driver', 'Suction',
 #           'Suture wire', 'Hemolock Clip', 'Fenestrated Bipolar Forceps', 'Suture needle', 'Prograsp Forceps',
 #           'Vessel Loop', 'Cadiere Forceps', 'Gauze', 'Bulldog clamp', 'Da Vinci trocar', 'Echography',
@@ -57,7 +60,7 @@ DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 MODEL_NAME = config['model']  # segmentation model
 
 # DATA ROOT
-DATA_DIR = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN/test"
+DATA_DIR = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN/train"
 dest = "/home/kmarc/workspace/nas_private/sanity_check_output"
 #DATA_DIR = "/Volumes/ORSI/Kevin/Dataset_RAPN_20procedures/test"
 #dest = "/Volumes/ORSI/Kevin/Dataset_RAPN_20procedures"
@@ -111,7 +114,7 @@ def main():
     # define preprocessing function
     #preprocessing_fn = smp.encoders.get_preprocessing_fn(ENCODER, ENCODER_WEIGHTS)
     preprocessing_fn = smp.encoders.get_preprocessing_fn('timm-mobilenetv3_large_100', ENCODER_WEIGHTS)
-    model.load_state_dict(torch.load("/home/kmarc/workspace/nas_private/RAPN_results/base_model/binary/FPNtu-efficientnetv2_rw_s_bs16_lr0.0002_focaldice/tu-efficientnetv2_rw_s-FPN-30ce.pth"))
+    model.load_state_dict(torch.load("/home/kmarc/workspace/nas_private/RAPN_results/base_model/multiclass_1/DeepLabV3+tu-efficientnet_b4_bs8_lr0.0007_focal/tu-efficientnet_b4-DeepLabV3+-30ce.pth"))
     #model.load_state_dict(torch.load("/Users/kevinmarchesini/Desktop/tu-efficientnet_b4-DeepLabV3+-30ce.pth", map_location='cpu'))
     model.to(DEVICE)
 
@@ -129,7 +132,7 @@ def main():
 
     dir_proc = os.listdir(os.path.join(DATA_DIR, 'raw_images'))
     dict_proc = {}
-    print(dir_proc)
+    #print(dir_proc)
     for d in dir_proc:
         if '._' not in d:
             dict_proc[d] = []
@@ -148,7 +151,7 @@ def main():
         pred = np.argmax(model.predict(image)[0].cpu().squeeze(), axis=0)
 
         IoU = computeIoU(pred, mask, len(classes))
-        print(p, num, IoU)
+        #print(p, num, IoU)
 
         # if the IoU of a class present in the real mask is low than the threshold we add the image to the list
         str = ""
@@ -164,9 +167,9 @@ def main():
 
     # create a Dataframe with the occurencies of each class
     df = pd.DataFrame.from_dict(dict_proc)
-    print(df)
+    #print(df)
 
-    df.to_excel(dest + '/check_8classes_test.xlsx')
+    df.to_excel(dest + '/check_8classes_train.xlsx')
 
 
 if __name__ == '__main__':
