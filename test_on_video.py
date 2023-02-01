@@ -103,7 +103,7 @@ with alive_bar(num_frames) as bar:
             #result = torch.bitwise_not(model.predict(image)[0] > 0.5).float().cpu().detach().numpy()[0] # if use Jente's moodel
             result = np.argmax(model.predict(image)[0].cpu().squeeze(), axis=0) # if use my model
             # Convert the masked in a colored masks
-            fr = class2color(result)
+            fr = class2color(result, len(classes))
 
             # Overlay of the colored mask on the original video
             overlay = cv2.addWeighted(np.uint8(frame), 0.5, np.uint8(fr), 0.6, 1)
