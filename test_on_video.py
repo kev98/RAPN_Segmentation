@@ -95,7 +95,7 @@ with alive_bar(num_frames) as bar:
             start = time.time()
             #frame = crop(frame)
 
-            #frame = cv2.resize(frame, (512, 512))
+            frame = cv2.resize(frame, (512, 512))
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
             # Inference of the model
