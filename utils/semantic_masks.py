@@ -1,21 +1,14 @@
 import numpy as np
 
-# Define the mapping of the classes to their respective color in RGB
-'''class_color_mapping = {
-    0: (0, 0, 0),           # Background - BLACK
-    1: (112, 62, 66),       # Monopolar Curved Scissors - BORDEAUX
-    2: (152, 1, 130)        # Suction - MAGENTA
-}'''
-
 # binary
-'''class_color_mapping = {
+color_mapping_2 = {
     0: (0, 0, 0),           # Background - BLACK
     1: (0, 130, 200),       # Instruments
-}'''
+}
 
 # Define the mapping of the classes to their respective color in RGB for the MULTICLASS_1 problem
 # (build using class_mapping.json and config.json)
-color_mapping = {
+color_mapping_8 = {
     0: (0, 0, 0),           # Background - BLACK
     1: (209, 25, 30),       # Force Bipolar - RED
     2: (24, 200, 59),       # Fenestrated Bipolar Forceps - GREEN
@@ -27,8 +20,9 @@ color_mapping = {
 }
 
 # Define the mapping of the classes to their respective color in RGB for the MULTICLASS problem (all classes)
+# with Bulldog wire class
 # (build using class_mapping.json and config.json)
-'''color_mapping = {
+color_mapping_23 = {
     0: (0, 0, 0),           # Background - BLACK
     1: (66, 62, 112),       # Monopolar Curved Scissors - DARK PURPLE
     2: (209, 25, 30),       # Force Bipolar - RED
@@ -52,9 +46,12 @@ color_mapping = {
     20: (140, 222, 14),     # Hemolock Clip Applier -
     21: (41, 38, 64),       # Laparoscopic Needle Driver -
     22: (255, 255, 255),    # Other instruments -
-}'''
+}
 
-'''color_mapping = {
+# Define the mapping of the classes to their respective color in RGB for the MULTICLASS problem (all classes)
+# without Bulldog wire (to be updated when we'll merged some classes)
+# (build using class_mapping.json and config.json)
+color_mapping_22 = {
     0: (0, 0, 0),           # Background - BLACK
     1: (66, 62, 112),       # Monopolar Curved Scissors - DARK PURPLE
     2: (209, 25, 30),       # Force Bipolar - RED
@@ -78,14 +75,25 @@ color_mapping = {
     19: (140, 222, 14),     # Hemolock Clip Applier -
     20: (41, 38, 64),       # Laparoscopic Needle Driver -
     21: (255, 255, 255),    # Other instruments -
-}'''
+}
 
-def class2color(mask):
+def class2color(mask, n):
     """
     Function which generates a colored mask based on the input class value mask
     :param mask: A mask where each class has its own integer value
+           n: number of the classes
     :return: A mask where each class has its own color
     """
+    if n == 2:
+        color_mapping = color_mapping_2
+    elif n == 8:
+        color_mapping = color_mapping_8
+    elif n == 22:
+        color_mapping = color_mapping_22
+    elif n == 23:
+        color_mapping = color_mapping_23
+    else:
+        return None
 
     # Initialize a blank image
     color_mask = np.zeros([mask.shape[0], mask.shape[1], 3])
