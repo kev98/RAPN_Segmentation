@@ -14,6 +14,10 @@ import cv2
 import glob
 from alive_progress import alive_bar
 import json
+import sys
+current = os.path.dirname(os.path.realpath(__file__))
+parent = os.path.dirname(current)
+sys.path.append(parent)
 from utils.semantic_masks import color2class
 
 
@@ -76,8 +80,8 @@ def crop(img, mask, removing_color):
 
 def main():
     # Specify the input folder and the output folder
-    source_folder = r"/home/kmarc/workspace/nas_private/new_images"
-    dest_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN/train"
+    source_folder = r"/home/kmarc/workspace/nas_private/RAPN100_2"
+    dest_folder = r"/home/kmarc/workspace/nas_private/new_images"
     #create_dataset_tree(source_folder, dest_folder)
 
     # create a color mapping reading the JSON file

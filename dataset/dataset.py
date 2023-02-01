@@ -98,6 +98,7 @@ class RAPN_Dataset(BaseDataset):
         # if we want to create a dataset for multiclass segmentation
         else:
             # separate the masks of the different classes and stack them
+            mask[mask == 2] = 31 #conversion of the Bulldog wire to Suture wire
             masks = [(mask == v) for v in self.class_values]
             mask = np.stack(masks, axis=-1).astype('float')
             sum = np.sum(mask, axis=2)

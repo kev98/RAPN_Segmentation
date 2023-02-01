@@ -49,11 +49,18 @@ PATIENCE = 10
 #classes = ["Background", "Instrument"]
 #classes = ['Tissue', 'Force Bipolar', 'Fenestrated Bipolar Forceps', 'Prograsp Forceps', 'Monopolar Curved Scissors',
 #           'Suction', 'Large Needle Driver', 'Echography']
+#classes = ['Tissue', 'Monopolar Curved Scissors', 'Force Bipolar', 'Large Needle Driver', 'Suction',
+#           'Suture wire', 'Hemolock Clip', 'Fenestrated Bipolar Forceps', 'Suture needle', 'Prograsp Forceps',
+#           'Vessel Loop', 'Cadiere Forceps', 'Gauze', 'Bulldog clamp', 'Da Vinci trocar', 'Echography',
+#           'Laparoscopic Fenestrated Forceps', 'Bulldog wire', 'Endobag', 'Veriset', 'Hemolock Clip Applier',
+#           'Laparoscopic Needle Driver', 'Other instruments']
 classes = ['Tissue', 'Monopolar Curved Scissors', 'Force Bipolar', 'Large Needle Driver', 'Suction',
            'Suture wire', 'Hemolock Clip', 'Fenestrated Bipolar Forceps', 'Suture needle', 'Prograsp Forceps',
            'Vessel Loop', 'Cadiere Forceps', 'Gauze', 'Bulldog clamp', 'Da Vinci trocar', 'Echography',
            'Laparoscopic Fenestrated Forceps', 'Bulldog wire', 'Endobag', 'Veriset', 'Hemolock Clip Applier',
-           'Laparoscopic Needle Driver', 'Other instruments']
+           'Laparoscopic Needle Driver', 'Airseal trocar', 'Endobag wire', 'Endobag specimen retriever',
+           'Laparoscopic Clip Applier', 'Drain', 'Metal clip', 'Laparoscopic Scissors', 'Foam extruder',
+           'Assistant trocar', 'Fibrilar', 'Left PBP Needle Driver']
 
 #Choose the encoder and the segmentation model
 ENCODER = config['encoder']  # encoder
@@ -114,7 +121,7 @@ def main():
 
     # define preprocessing function
     preprocessing_fn = smp.encoders.get_preprocessing_fn('timm-mobilenetv3_large_100', ENCODER_WEIGHTS)
-    model.load_state_dict(torch.load("/home/kmarc/workspace/nas_private/RAPN_results/base_model/multiclass_all/FPNtu-efficientnetv2_rw_s_bs16_lr0.0003_focaldice_othclasses/tu-efficientnetv2_rw_s-FPN-30ce.pth"))
+    model.load_state_dict(torch.load("/home/kmarc/workspace/nas_private/RAPN_results/base_model/multiclass_all/FPNtu-efficientnetv2_rw_s_bs16_lr0.0003_focaldiceallall/tu-efficientnetv2_rw_s-FPN-30ce.pth"))
     model.to(DEVICE)
     model.eval()
 
