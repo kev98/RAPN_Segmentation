@@ -10,7 +10,7 @@ import json
 
 
 class RAPN_Dataset(BaseDataset):
-    """SAR-RARP50 Dataset. Read images and corresponding masks, apply augmentation and preprocessing transformations.
+    """RAPN100 Dataset. Read images and corresponding masks, apply augmentation and preprocessing transformations.
 
     Args:
         images_dir (str): path to images folder
