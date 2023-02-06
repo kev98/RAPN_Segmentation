@@ -59,13 +59,13 @@ if PLATFORM == "server":
     out_dir = r"/home/kmarc/workspace/nas_private/DSAD_results" + \
               f"/{MODEL_NAME}{ENCODER}_bs{BATCH_SIZE}_lr{LEARNING_RATE}_{LOSS}"
     train_dir = os.path.join(DATA_DIR, 'train')
-    valid_dir = os.path.join(DATA_DIR, 'val')
+    valid_dir = os.path.join(DATA_DIR, 'test')
 elif PLATFORM == "local":
     DATA_DIR = r"/Volumes/TOSHIBA EXT/DSAD_Dataset/multilabel"
     out_dir = r"/Users/kevinmarchesini/Desktop/Internship @ Orsi Academy/DSAD_results" + \
               f"/{MODEL_NAME}{ENCODER}_bs{BATCH_SIZE}_lr{LEARNING_RATE}_{LOSS}"
-    train_dir = os.path.join(DATA_DIR, 'train')
-    valid_dir = os.path.join(DATA_DIR, 'val')
+    train_dir = os.path.join(DATA_DIR, '')
+    valid_dir = os.path.join(DATA_DIR, '')
 else:
     DATA_DIR = ""
 
