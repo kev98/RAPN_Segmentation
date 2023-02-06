@@ -52,13 +52,13 @@ MODEL_NAME = config['model']  # segmentation model
 
 # DATA ROOT
 if PLATFORM == "server":
-    DATA_DIR = r"/home/kmarc/workspace/nas_private/DSAD_Dataset"
+    DATA_DIR = r"/home/kmarc/workspace/nas_private/DSAD_Dataset/" + main_class
     out_dir = r"/home/kmarc/workspace/nas_private/DSAD_results_binary" + \
               f"/{main_class}/{MODEL_NAME}{ENCODER}_bs{BATCH_SIZE}_lr{LEARNING_RATE}_{LOSS}"
     train_dir = os.path.join(DATA_DIR, 'train')
     valid_dir = os.path.join(DATA_DIR, 'test')
 elif PLATFORM == "local":
-    DATA_DIR = r"/Volumes/TOSHIBA EXT/DSAD_Dataset/abdominal_wall"
+    DATA_DIR = r"/Volumes/TOSHIBA EXT/DSAD_Dataset/" + main_classs
     out_dir = r"/Users/kevinmarchesini/Desktop/Internship @ Orsi Academy/DSAD_results_binary" + \
               f"/{main_class}/{MODEL_NAME}{ENCODER}_bs{BATCH_SIZE}_lr{LEARNING_RATE}_{LOSS}"
     train_dir = os.path.join(DATA_DIR, '')

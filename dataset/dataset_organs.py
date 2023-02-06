@@ -101,8 +101,8 @@ class DSAD_Dataset_Binary(BaseDataset):
         self.masks = glob.glob(os.path.join(images_dir, '*/mask*'))
         self.images.sort()
         self.masks.sort()
-        #print('number of images: ',len(self.images))
-        #print('number of masks: ', len(self.masks))
+        print('number of images: ',len(self.images))
+        print('number of masks: ', len(self.masks))
 
         self.augmentation = augmentation
         self.preprocessing = preprocessing
