@@ -134,8 +134,8 @@ def main():
     #print(train_dataset.__getitem__(0)[1].shape)
 
     # TRAIN AND VALIDATION LOADER
-    train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=0, drop_last=True)
-    valid_loader = DataLoader(valid_dataset, batch_size=1, shuffle=False, num_workers=0)
+    train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=8, drop_last=True)
+    valid_loader = DataLoader(valid_dataset, batch_size=1, shuffle=False, num_workers=4)
 
     # LOSSES (2 losses if you want to experience with a combination of losses, otherwise just pass None)
     if LOSS == 'focal':
