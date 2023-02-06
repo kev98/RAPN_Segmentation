@@ -5,7 +5,7 @@ import numpy as np
 import torch
 import pandas as pd
 import segmentation_models_pytorch as smp
-from dataset.dataset_organs import DSAD_Dataset_Multiclass
+from dataset.dataset_organs import DSAD_Dataset_Binary
 from torch.utils.data import DataLoader
 from utils.albumentation import get_training_augmentation, get_preprocessing, get_validation_augmentation
 from utils.helper_functions import saveResults, network_stats, create_dataframe, create_testdataframe
@@ -39,7 +39,8 @@ LEARNING_RATE = 1e-4
 PATIENCE = 15
 
 # Definition of the segmentation classes
-classes = ['abdominal_wall', 'colon', 'liver', 'pancreas', 'small_intestine', 'spleen', 'stomach', 'other']
+classes = ['other', 'abdominal_wall']
+main_class = classes[1]
 
 #Choose the encoder and the segmentation model
 ENCODER = config['encoder']  # encoder
@@ -51,15 +52,15 @@ MODEL_NAME = config['model']  # segmentation model
 
 # DATA ROOT
 if PLATFORM == "server":
-    DATA_DIR = r"/home/kmarc/workspace/nas_private/DSAD_Dataset/multilabel"
-    out_dir = r"/home/kmarc/workspace/nas_private/DSAD_results" + \
-              f"/{MODEL_NAME}{ENCODER}_bs{BATCH_SIZE}_lr{LEARNING_RATE}_{LOSS}"
+    DATA_DIR = r"/home/kmarc/workspace/nas_private/DSAD_Dataset"
+    out_dir = r"/home/kmarc/workspace/nas_private/DSAD_results_binary" + \
+              f"/{main_class}/{MODEL_NAME}{ENCODER}_bs{BATCH_SIZE}_lr{LEARNING_RATE}_{LOSS}"
     train_dir = os.path.join(DATA_DIR, 'train')
     valid_dir = os.path.join(DATA_DIR, 'test')
 elif PLATFORM == "local":
-    DATA_DIR = r"/Volumes/TOSHIBA EXT/DSAD_Dataset/multilabel"
-    out_dir = r"/Users/kevinmarchesini/Desktop/Internship @ Orsi Academy/DSAD_results" + \
-              f"/{MODEL_NAME}{ENCODER}_bs{BATCH_SIZE}_lr{LEARNING_RATE}_{LOSS}"
+    DATA_DIR = r"/Volumes/TOSHIBA EXT/DSAD_Dataset/abdominal_wall"
+    out_dir = r"/Users/kevinmarchesini/Desktop/Internship @ Orsi Academy/DSAD_results_binary" + \
+              f"/{main_class}/{MODEL_NAME}{ENCODER}_bs{BATCH_SIZE}_lr{LEARNING_RATE}_{LOSS}"
     train_dir = os.path.join(DATA_DIR, '')
     valid_dir = os.path.join(DATA_DIR, '')
 else:
@@ -115,7 +116,7 @@ def main():
     # print(macs, params)
 
     # TRAINING SET
-    train_dataset = DSAD_Dataset_Multiclass(
+    train_dataset = DSAD_Dataset_Binary(
         train_dir,
         classes=CLASSES,
         augmentation=get_training_augmentation(),
@@ -123,7 +124,7 @@ def main():
     )
 
     # VALIDATION AND TEST SET
-    valid_dataset = DSAD_Dataset_Multiclass(
+    valid_dataset = DSAD_Dataset_Binary(
         valid_dir,
         classes=CLASSES,
         augmentation=get_validation_augmentation(),
@@ -133,8 +134,8 @@ def main():
     #print(train_dataset.__getitem__(0)[1].shape)
 
     # TRAIN AND VALIDATION LOADER
-    train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=8, drop_last=True)
-    valid_loader = DataLoader(valid_dataset, batch_size=1, shuffle=False, num_workers=4)
+    train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=0, drop_last=True)
+    valid_loader = DataLoader(valid_dataset, batch_size=1, shuffle=False, num_workers=0)
 
     # LOSSES (2 losses if you want to experience with a combination of losses, otherwise just pass None)
     if LOSS == 'focal':

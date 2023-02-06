@@ -12,7 +12,7 @@ import numpy as np
 import torch
 import segmentation_models_pytorch as smp
 from utils.albumentation import get_training_augmentation, get_preprocessing, get_validation_augmentation
-from dataset.dataset_organs import DSAD_Dataset
+from dataset.dataset_organs import DSAD_Dataset_Multiclass
 from torch.utils.data import DataLoader
 from epoch import TrainEpoch, ValidEpoch
 
@@ -143,7 +143,7 @@ def objective(trial):
     preprocessing_fn = smp.encoders.get_preprocessing_fn('timm-mobilenetv3_large_100', ENCODER_WEIGHTS)
 
     # TRAINING SET (I used all because the dataset is very little)
-    train_dataset = DSAD_Dataset(
+    train_dataset = DSAD_Dataset_Multiclass(
         train_dir,
         classes=CLASSES,
         augmentation=get_training_augmentation(),
@@ -151,7 +151,7 @@ def objective(trial):
     )
 
     # VALIDATION AND TEST SET
-    valid_dataset = DSAD_Dataset(
+    valid_dataset = DSAD_Dataset_Multiclass(
         valid_dir,
         classes=CLASSES,
         augmentation=get_validation_augmentation(),
