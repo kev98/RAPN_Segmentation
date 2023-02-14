@@ -25,8 +25,8 @@ def crop(img, mask):
 
 def main():
     # Specify the input folder
-    source_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN_2"
-    source_folder = r"/Volumes/ORSI/Kevin/Segmentation_Dataset_RAPN_2/train"
+    source_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN_2/train"
+    #source_folder = r"/Volumes/ORSI/Kevin/Segmentation_Dataset_RAPN_2/train"
 
     images = glob.glob(source_folder + '/raw_images/*/*.png')
     masks = glob.glob(source_folder + '/masks/*/*.png')
