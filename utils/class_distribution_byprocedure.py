@@ -9,10 +9,15 @@ import os
 
 def main():
     # Specify the dataset folder
-    source_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN/masks"
+    source_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN_2"
     #source_folder = "/Volumes/ORSI/Kevin/Dataset_RAPN_20procedures/train/masks"
+    source_folder = "/Volumes/ORSI/Kevin/Dataset_RAPN_20procedures"
 
-    dir_list = os.listdir(source_folder)
+    dir_list_ = os.listdir(os.path.join(source_folder, 'train', 'masks')) + \
+               os.listdir(os.path.join(source_folder, 'val', 'masks')) + \
+               os.listdir(os.path.join(source_folder, 'test', 'masks'))
+    dir_list = [x for x in dir_list_ if (not x.endswith('xlsx')) and (not x.startswith('._'))]
+    print('dir list: ', dir_list)
 
     #masks = glob.glob(source_folder + '/masks/*/*.png')
     #masks.sort()
@@ -22,7 +27,7 @@ def main():
     with alive_bar(len(dir_list)) as bar:
         for dir in dir_list:
             count_classes = [0 for i in range(0, 40)]
-            masks = glob.glob(os.path.join(source_folder, dir) + '/*.png')
+            masks = glob.glob(os.path.join(source_folder,'*', 'masks', dir) + '/*.png')
             masks.sort()
             for mask_path in masks:
                 # open the mask and retrieve the size
@@ -58,7 +63,7 @@ def main():
     df = pd.DataFrame(tot_count, index=classes_list, columns=dir_list)
     print(df)
 
-    df.to_excel(source_folder + '/class_distribution.xlsx')
+    df.to_excel(source_folder + '/class_distribution_perprocedure_final.xlsx')
 
 
 if __name__ == '__main__':

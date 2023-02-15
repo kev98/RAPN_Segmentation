@@ -81,7 +81,7 @@ def main():
     df = pd.DataFrame(count_classes, index=classes_list, columns=['Occurencies'])
     print(df)
 
-    df.to_excel(source_folder + '/class_distribution.xlsx')
+    df.to_excel(source_folder + '/class_distribution_final.xlsx')
 
 
 if __name__ == '__main__':

@@ -8,7 +8,7 @@ import pandas as pd
 
 def main():
     # Specify the dataset folder
-    source_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN"
+    source_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN_2"
     #source_folder = "/Volumes/ORSI/Kevin/Dataset_RAPN_20procedures/train"
 
     masks = glob.glob(source_folder + '/*/masks/*/*.png')
@@ -47,7 +47,7 @@ def main():
     df = pd.DataFrame(count_classes, index=classes_list, columns=['Occurencies'])
     print(df)
 
-    df.to_excel(source_folder + '/class_distribution.xlsx')
+    df.to_excel(source_folder + '/class_distribution_final.xlsx')
 
 
 if __name__ == '__main__':
