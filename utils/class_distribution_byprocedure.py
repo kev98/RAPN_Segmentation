@@ -11,7 +11,7 @@ def main():
     # Specify the dataset folder
     source_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN_2"
     #source_folder = "/Volumes/ORSI/Kevin/Dataset_RAPN_20procedures/train/masks"
-    source_folder = "/Volumes/ORSI/Kevin/Dataset_RAPN_20procedures"
+    #source_folder = "/Volumes/ORSI/Kevin/Dataset_RAPN_20procedures"
 
     dir_list_ = os.listdir(os.path.join(source_folder, 'train', 'masks')) + \
                os.listdir(os.path.join(source_folder, 'val', 'masks')) + \
