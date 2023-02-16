@@ -1,5 +1,5 @@
 {
-    "classes": 41,
+    "classes": 43,
     "labels": {
         "Background": {
             "label": 0,
@@ -96,6 +96,10 @@
         "Fibrilar": {
             "label": 10,
             "color": "#6ca2a1"
+        },
+        "Foam": {
+            "label": 40,
+            "color": "#d32c73"
         },
         "Foam extruder": {
             "label": 39,
@@ -232,6 +236,10 @@
         "Hemopatch": {
             "label": 32,
             "color": "#e0035c"
+        },
+        "Hemostatic agens": {
+            "label": 41,
+            "color": "#552c69"
         },
         "Inside Body": {
             "label": 15,
@@ -390,7 +398,7 @@
             "color": "#29a2bb"
         },
         "Other instruments": {
-            "label": 40,
+            "label": 42,
             "color": "#ffffff"
         }
     }
