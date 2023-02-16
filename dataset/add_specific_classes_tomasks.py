@@ -80,10 +80,10 @@ def crop(img, mask, removing_color):
 
 def main():
     # Specify the input folder and the output folder
-    #source_folder = r"/home/kmarc/workspace/nas_private/RAPN100_2"
-    #dest_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN"
-    source_folder = r"/Volumes/ORSI/Kevin/RAPN100_prova"
-    dest_folder = r'/Volumes/ORSI/Kevin/RAPN100'
+    source_folder = r"/home/kmarc/workspace/nas_private/RAPN100"
+    dest_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN"
+    #source_folder = r"/Volumes/ORSI/Kevin/RAPN100_prova"
+    #dest_folder = r'/Volumes/ORSI/Kevin/RAPN100'
     # create_dataset_tree(source_folder, dest_folder)
 
     list_images = ["RAPN102_0278.png", "RAPN102_0279.png", "RAPN103_0179.png", "RAPN103_0180.png", "RAPN103_0188.png",
