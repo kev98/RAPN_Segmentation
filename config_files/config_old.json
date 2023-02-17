@@ -94,7 +94,7 @@
             "color": "#3bc818"
         },
         "Fibrilar": {
-            "label": 12,
+            "label": 10,
             "color": "#6ca2a1"
         },
         "Foam": {
@@ -234,15 +234,15 @@
             "color": "#69f08f"
         },
         "Hemopatch": {
-            "label": 12,
+            "label": 32,
             "color": "#e0035c"
         },
         "Hemostatic agens": {
-            "label": 12,
+            "label": 41,
             "color": "#552c69"
         },
         "Inside Body": {
-            "label": 0,
+            "label": 15,
             "color": "#e4f3ec"
         },
         "Laparoscopic Clip Applier": {
@@ -366,15 +366,15 @@
             "color": "#e98768"
         },
         "Veriset_1": {
-            "label": 12,
+            "label": 32,
             "color": "#b78c2f"
         },
         "Veriset_2": {
-            "label": 12,
+            "label": 32,
             "color": "#c04010"
         },
         "Veriset_3": {
-            "label": 12,
+            "label": 32,
             "color": "#5b99a7"
         },
         "Vessel Loop_1": {
