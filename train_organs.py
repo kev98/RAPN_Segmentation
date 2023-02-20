@@ -35,7 +35,7 @@ SAVE_CRITERION = config['save']
 ACTIVATION = config['activation']
 PLATFORM = config['platform']
 PROFILE = config['profile']
-LEARNING_RATE = 1e-4
+LEARNING_RATE = 3.3e-4
 PATIENCE = 15
 
 # Definition of the segmentation classes
@@ -72,6 +72,7 @@ def main():
     if MODEL_NAME == 'FPN':
         model = smp.FPN(
             encoder_name=ENCODER,
+            decoder_dropout=0.46,
             encoder_weights=ENCODER_WEIGHTS,
             classes=len(classes),
             activation=ACTIVATION,
@@ -156,7 +157,7 @@ def main():
     ]
 
     # OPTIMIZER (you can set here the starting learning rate)
-    optimizer = torch.optim.AdamW([
+    optimizer = torch.optim.Adam([
         dict(params=model.parameters(), lr=LEARNING_RATE),
     ])
 

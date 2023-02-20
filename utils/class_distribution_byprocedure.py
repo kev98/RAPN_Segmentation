@@ -9,7 +9,7 @@ import os
 
 def main():
     # Specify the dataset folder
-    source_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN_2"
+    source_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN_tris"
     #source_folder = "/Volumes/ORSI/Kevin/Dataset_RAPN_20procedures/train/masks"
     #source_folder = "/Volumes/ORSI/Kevin/Dataset_RAPN_20procedures"
 
@@ -26,12 +26,12 @@ def main():
 
     with alive_bar(len(dir_list)) as bar:
         for dir in dir_list:
-            count_classes = [0 for i in range(0, 40)]
+            count_classes = [0 for i in range(0, 42)]
             masks = glob.glob(os.path.join(source_folder,'*', 'masks', dir) + '/*.png')
             masks.sort()
             for mask_path in masks:
                 # open the mask and retrieve the size
-                print(mask_path)
+                #print(mask_path)
                 mask = cv2.imread(mask_path, 0)
                 width, height = mask.shape
                 flat = mask.reshape(width*height)
@@ -50,14 +50,23 @@ def main():
     print(tot_count)
 
     # ordered list of all the classes
-    classes_list =['Background', 'Bulldog clamp', 'Bulldog wire', 'Cadiere Forceps', 'Catheter',
+    '''classes_list =['Background', 'Bulldog clamp', 'Bulldog wire', 'Cadiere Forceps', 'Catheter',
      'Drain', 'Endobag', 'Endobag specimen retriever', 'Endobag wire', 'Fenestrated Bipolar Forceps', 'Fibrilar',
      'Force Bipolar', 'Gauze', 'Hemolock Clip Applier', 'Hemolock Clip', 'Inside Body', 'Laparoscopic Clip Applier',
      'Laparoscopic Fenestrated Forceps', 'Laparoscopic Needle Driver', 'Laparoscopic Scissors', 'Large Needle Driver',
      'Left PBP Needle Driver', 'Maryland Bipolar Forceps', 'Metal clip', 'Monopolar Curved Scissors',
      'Prograsp Forceps', 'Right PBP Needle Driver', 'Scissors', 'Suction', 'Surgical_Glove_Tip', 'Suture needle',
      'Suture wire', 'Veriset', 'Vessel Loop', 'Vessel Sealer Extend', 'Echography', 'Da Vinci trocar',
-     'Assistant trocar', 'Airseal trocar', 'Foam extruder']
+     'Assistant trocar', 'Airseal trocar', 'Foam extruder']'''
+
+    classes_list =['Background', 'Bulldog clamp', 'Bulldog wire', 'Cadiere Forceps', 'Catheter',
+     'Drain', 'Endobag', 'Endobag specimen retriever', 'Endobag wire', 'Fenestrated Bipolar Forceps', 'null',
+     'Force Bipolar', 'Hemostasis', 'Hemolock Clip Applier', 'Hemolock Clip', 'null', 'Laparoscopic Clip Applier',
+     'Laparoscopic Fenestrated Forceps', 'Laparoscopic Needle Driver', 'Laparoscopic Scissors', 'Large Needle Driver',
+     'Left PBP Needle Driver', 'Maryland Bipolar Forceps', 'Metal clip', 'Monopolar Curved Scissors',
+     'Prograsp Forceps', 'Right PBP Needle Driver', 'Scissors', 'Suction', 'Surgical_Glove_Tip', 'Suture needle',
+     'Suture wire', 'null', 'Vessel Loop', 'Vessel Sealer Extend', 'Echography', 'Da Vinci trocar',
+     'Assistant trocar', 'Airseal trocar', 'Foam extruder', 'Foam', 'null']
 
     # create a Dataframe with the occurencies of each class
     df = pd.DataFrame(tot_count, index=classes_list, columns=dir_list)

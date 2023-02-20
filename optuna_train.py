@@ -227,7 +227,7 @@ def objective(trial):
 def main():
 
     study = optuna.create_study(direction="maximize")
-    study.optimize(objective, n_trials=100, timeout=200000)
+    study.optimize(objective, n_trials=100, timeout=172800)
     fig = optuna.visualization.plot_param_importances(study)
     fig.write_image('Optuna.png')
 

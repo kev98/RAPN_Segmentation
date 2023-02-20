@@ -18,7 +18,7 @@ cl = int(config['class'])
 s = config['set']
 
 #procedure_path = '/Volumes/ORSI/Ila_RAPN/masks/RAPN41'
-procedure_path = os.path.join('/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN', s, 'masks/RAPN') + procedure
+procedure_path = os.path.join('/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN_tris', s, 'masks/RAPN') + procedure
 
 images_path = glob.glob(procedure_path + '/*')
 
@@ -26,8 +26,8 @@ img_list = []
 
 for im in images_path:
      image = cv2.imread(im)
-     if image.shape[0] < 500 or image.shape[1] < 500:
-        print(im, image.shape)
+     #if image.shape[0] < 500 or image.shape[1] < 500:
+     print(im, image.shape)
      image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
      if cl in image:
           img_list.append(im.split('/')[-1])

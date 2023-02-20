@@ -68,7 +68,7 @@ def saveResults(X_test, model, num_classes, platform, encoder, model_name, out_d
             save_dir = os.path.join(out_dir, 'TEST')
             if not os.path.exists(save_dir):
                 os.mkdir(save_dir)
-            mask = class2color(res)
+            mask = class2color(res, num_classes)
             cv2.imwrite(save_dir + '/predicted_mask_' + str(ix) + '.png', mask[:, :, ::-1])
         ix = ix + 1
     
@@ -85,7 +85,7 @@ def network_stats(model, device, batch_size):
     # Print summary of the model layers given the input dimension
     print(summary(model.to(device), torch.rand(batch_size, 3, 512, 512).to(device)))
     input = torch.rand(batch_size, 3, 512, 512).to(device)
-
+    '''
     # warm-up
     model(input)
     # profile a network forward
@@ -96,7 +96,7 @@ def network_stats(model, device, batch_size):
         print(prof.key_averages(group_by_stack_n=5).table(sort_by='self_cuda_time_total'))
     else:
         print(prof.key_averages(group_by_stack_n=5).table(sort_by='self_cpu_time_total'))
-
+    '''
 
 # function to create a dataframe on the valid epoch results
 def create_dataframe(model, epoch, IoU, inference_time, FBetaScore, classes, train_logs, valid_logs, DiceScore):

@@ -16,11 +16,18 @@ IMAGE_HEIGHT = 512
 IMAGE_WIDTH = 512
 
 # If you use the binary model
-classes = ['background', 'instrument']
+#classes = ['background', 'instrument']
 # If you use the multiclass model
 #classes = ['Tissue', 'Force Bipolar', 'Fenestrated Bipolar Forceps', 'Prograsp Forceps', 'Monopolar Curved Scissors',
 #           'Suction', 'Large Needle Driver', 'Echography']
-model_path = r'/home/kmarc/workspace/nas_private/RAPN_results/base_model/binary/FPNtu-efficientnetv2_rw_s_bs16_lr0.0002_focaldice/tu-efficientnetv2_rw_s-FPN-30ce.pth'
+classes = ['Tissue', 'Monopolar Curved Scissors', 'Force Bipolar', 'Large Needle Driver', 'Suction',
+           'Suture wire', 'Hemolock Clip', 'Fenestrated Bipolar Forceps', 'Suture needle', 'Prograsp Forceps',
+           'Vessel Loop', 'Cadiere Forceps', 'Gauze', 'Bulldog clamp', 'Da Vinci trocar', 'Echography',
+           'Laparoscopic Fenestrated Forceps', 'Bulldog wire', 'Endobag', 'Veriset', 'Hemolock Clip Applier',
+           'Laparoscopic Needle Driver', 'Other instruments']
+#model_path = r'/home/kmarc/workspace/nas_private/RAPN_results/base_model/binary/FPNtu-efficientnetv2_rw_s_bs16_lr0.0002_focaldice/tu-efficientnetv2_rw_s-FPN-30ce.pth'
+#model_path = r'/home/kmarc/workspace/nas_private/RAPN_resultsi/base_model/multiclass_1/DeepLabV3+tu-efficientnet_b4_bs8_lr0.0007_focal/tu-efficientnet_b4-DeepLabV3+-30ce.pth'
+model_path = r'/home/kmarc/workspace/nas_private/RAPN_results/base_model/multiclass_all/FPNtu-efficientnetv2_rw_s_bs16_lr0.0003_focaldice_othclasses/tu-efficientnetv2_rw_s-FPN-30ce.pth'
 
 #Choose the encoder and the segmentation model
 ENCODER = 'tu-efficientnetv2_rw_s'  # encoder
@@ -77,8 +84,8 @@ height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
 fourcc = cv2.VideoWriter_fourcc(*'MP4V')
 #out_folder = '/Users/kevinmarchesini/Desktop/Internship @ Orsi Academy/test_on_video/test_video_out'
-out_folder = '/home/kmarc/workspace/nas_private/inference_video/video_segmented_mymodel' # where the video segmented will be saved
-out_path = out_folder + '/' + os.path.basename(video_path).replace('.mp4', '_segm.mp4')
+out_folder = '/home/kmarc/workspace/nas_private/inference_video/video_segmented_mymodel_multiclass' # where the video segmented will be saved
+out_path = out_folder + '/' + os.path.basename(video_path).replace('.mp4', '23clFPN_segm.mp4')
 out = cv2.VideoWriter(out_path, fourcc, fps, (512, 512))
 num_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 

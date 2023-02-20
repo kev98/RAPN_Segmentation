@@ -81,7 +81,7 @@ def crop(img, mask, removing_color):
 def main():
     # Specify the input folder and the output folder
     source_folder = r"/home/kmarc/workspace/nas_private/RAPN100_2"
-    dest_folder = r"/home/kmarc/workspace/nas_private/new_images"
+    dest_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN"
     #create_dataset_tree(source_folder, dest_folder)
 
     # create a color mapping reading the JSON file
@@ -115,6 +115,8 @@ def main():
     masks = glob.glob(source_folder + '/masks/*/*.png')
     images.sort()
     masks.sort()
+    val_set = ['RAPN102', 'RAPN108','RAPN19', 'RAPN41', 'RAPN45', 'RAPN7', 'RAPN76', 'RAPN79', 'RAPN8', 'RAPN81', 'RAPN89', 'RAPN92', 'RAPN95', 'RAPN98']
+    test_set = ['RAPN115', 'RAPN20', 'RAPN36', 'RAPN47', 'RAPN48', 'RAPN50', 'RAPN91', 'RAPN96']
 
     with alive_bar(len(images)) as bar:
         for im_path, mask_path in zip(images, masks):
@@ -139,13 +141,22 @@ def main():
                 print(im_path)
                 im_cropped, mask_cropped = crop(im, mask, removing_color)
                 procedure = im_path.split('/')[-2]
-                im_path = dest_folder + '/raw_images/' + procedure + '/' + os.path.basename(im_path)
+                #print(procedure)
+                if procedure in val_set:
+                    dest = os.path.join(dest_folder, 'val')
+                elif procedure in test_set:
+                    dest = os.path.join(dest_folder, 'test')
+                else:
+                    dest = os.path.join(dest_folder, 'train')
+                im_path = dest + '/raw_images/' + procedure + '/' + os.path.basename(im_path) 
+                print(im_path)
                 cv2.imwrite(im_path, cv2.cvtColor(im_cropped, cv2.COLOR_BGR2RGB))
                 # Generate the corresponding class mask (= matrix with value related to class for each pixel),
                 # according to the "class_mapping.json" file
                 mask_cropped = color2class(mask_cropped, class_mapping)
                 mask_path = im_path.replace('raw_images', 'masks')
                 cv2.imwrite(mask_path, cv2.cvtColor(mask_cropped, cv2.COLOR_BGR2RGB))
+                print("FATTO")
 
             # Update the progress bar
             bar()

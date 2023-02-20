@@ -16,7 +16,7 @@ sys.path.append(parent)
 
 def main():
     # Specify the input folder and the output folder
-    folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN_bis/train"
+    folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN_bis/test"
     #folder = r'/Volumes/ORSI/Kevin/RAPN100/train'
 
     masks = glob.glob(folder + '/masks/*/*.png')

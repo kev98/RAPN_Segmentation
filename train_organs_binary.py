@@ -35,11 +35,11 @@ SAVE_CRITERION = config['save']
 ACTIVATION = config['activation']
 PLATFORM = config['platform']
 PROFILE = config['profile']
-LEARNING_RATE = 1e-4
+LEARNING_RATE = 1.738e-4
 PATIENCE = 15
 
 # Definition of the segmentation classes
-classes = ['other', 'abdominal_wall']
+classes = ['other', 'ureter']
 main_class = classes[1]
 
 #Choose the encoder and the segmentation model
@@ -73,6 +73,7 @@ def main():
     if MODEL_NAME == 'FPN':
         model = smp.FPN(
             encoder_name=ENCODER,
+            decoder_dropout=0.3173,
             encoder_weights=ENCODER_WEIGHTS,
             classes=len(classes),
             activation=ACTIVATION,
@@ -157,13 +158,13 @@ def main():
     ]
 
     # OPTIMIZER (you can set here the starting learning rate)
-    optimizer = torch.optim.AdamW([
+    optimizer = torch.optim.Adam([
         dict(params=model.parameters(), lr=LEARNING_RATE),
     ])
 
     # SCHEDULER for the reduction of the learning rate when the learning stagnates
     # namely when the valid loss doesn't decrease for a fixed amount of epochs
-    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience=5, threshold=1e-4,
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience=5, threshold=2e-4,
                                                            factor=0.7, verbose=True)
 
     # create epoch runners
