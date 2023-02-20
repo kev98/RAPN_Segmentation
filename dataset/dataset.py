@@ -89,8 +89,6 @@ class RAPN_Dataset(BaseDataset):
 
         # if we want to create a dataset for binary segmentation
         if len(self.classes) == 2:
-            # set the "Inside body" class as background
-            mask[mask == 15] = 0
             mask = binary_mask(mask)
             # separate the masks of the different classes and stack them
             masks = [(mask == v) for v in self.class_values]
