@@ -61,7 +61,11 @@ classes = ['Tissue', 'Force Bipolar', 'Fenestrated Bipolar Forceps', 'Prograsp F
 #           'Assistant trocar', 'Fibrilar', 'Left PBP Needle Driver']
 #classes = ['Tissue', 'Monopolar Curved Scissors', 'Hemolock Clip', 'Fenestrated Bipolar Forceps', 'Suction', 'Large Needle Driver', 'Suture wire',
 #                    'Vessel Loop', 'Suture needle', 'Bulldog clamp', 'Echography', 'Laparoscopic Clip Applier', 'Gauze', 'Endobag']
-
+classes = ['Tissue', 'Monopolar Curved Scissors', 'Force Bipolar', 'Large Needle Driver', 'Suction',
+           'Suture wire', 'Hemolock Clip', 'Fenestrated Bipolar Forceps', 'Suture needle', 'Prograsp Forceps',
+           'Vessel Loop', 'Cadiere Forceps', 'Hemostasis', 'Bulldog clamp', 'Da Vinci trocar', 'Echography',
+           'Laparoscopic Fenestrated Forceps', 'Endobag', 'Hemolock Clip Applier',
+           'Laparoscopic Needle Driver', 'Other instruments']
 #Choose the encoder and the segmentation model
 ENCODER = config['encoder']  # encoder
 ENCODER_WEIGHTS = 'imagenet'  # pretrained weights

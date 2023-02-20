@@ -77,6 +77,30 @@ color_mapping_22 = {
     21: (255, 255, 255),    # Other instruments -
 }
 
+color_mapping_21 = {
+    0: (0, 0, 0),           # Background - BLACK
+    1: (66, 62, 112),       # Monopolar Curved Scissors - DARK PURPLE
+    2: (209, 25, 30),       # Force Bipolar - RED
+    3: (159, 89, 106),      # Large Needle Driver -
+    4: (130, 1, 152),       # Suction - PURPLE
+    5: (104, 135, 233),     # Suture wire -
+    6: (176, 82, 25),       # Hemolock Clip -
+    7: (24, 200, 59),       # Fenestrated Bipolar Forceps - GREEN
+    8: (15, 59, 240),       # Suture needle
+    9: (242, 14, 138),      # Prograsp Forceps - MAGENTA
+    10: (132, 8, 131),      # Vessel Loop -
+    11: (91, 240, 244),     # Cadiere Forceps -
+    12: (255, 0, 0),        # Hemostasis-
+    13: (189, 93, 206),     # Bulldog clamp -
+    14: (6, 243, 246),      # Da Vinci trocar -
+    15: (92, 154, 27),      # Echography - DARK GREEN
+    16: (179, 254, 6),      # Laparoscopic Fenestrated Forceps -
+    17: (6, 134, 50),       # Endobag -
+    18: (140, 222, 14),     # Hemolock Clip Applier -
+    19: (41, 38, 64),       # Laparoscopic Needle Driver -
+    20: (255, 255, 255),    # Other instruments -
+}
+
 def class2color(mask, n):
     """
     Function which generates a colored mask based on the input class value mask
@@ -88,6 +112,8 @@ def class2color(mask, n):
         color_mapping = color_mapping_2
     elif n == 8:
         color_mapping = color_mapping_8
+    elif n == 21:
+        color_mapping = color_mapping_21
     elif n == 22:
         color_mapping = color_mapping_22
     elif n == 23:
