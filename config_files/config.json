@@ -397,6 +397,10 @@
             "label": 34,
             "color": "#29a2bb"
         },
+        "Hemostasis": {
+            "label": 12,
+            "color": "ff0000"
+        },
         "Other instruments": {
             "label": 42,
             "color": "#ffffff"
