@@ -41,7 +41,7 @@ class RAPN_Dataset(BaseDataset):
             json_file = json.load(openfile)
         mapping = json_file["labels"]
         self.class_values = []
-        self.other_label = json_file['classes'] + 1
+        self.other_label = json_file['classes'] - 1
         if len(classes) == 2:
             self.class_values.append(0)
             self.class_values.append(1)
@@ -74,12 +74,26 @@ class RAPN_Dataset(BaseDataset):
         self.augmentation = augmentation
         self.preprocessing = preprocessing
 
+    def merge_classes(self, mask):
+        mask[mask == 2] = 31 # conversion of the Bulldog wire in Suture wire
+        mask[mask == 8] = 31 # conversion of the Endobag wire in Suture wire
+        mask[mask == 25] = 3 # conversion of Prograsp Forceps in Cadiere Forceps
+        #mask[mask == 16] = 13 # conversion of Laparoscopic Clip Applier in Hemolock CLip Applier
+        mask[mask == 16] = 17 # conversion of Laparoscopic CLip Applier in Laparoscopic Fenestrated Forceps (a.k.a. "Laparoscopic Instruments")
+        mask[mask == 18] = 17 # conversion of Laparoscopic Needle Driver in Laparoscopic Fenestrated Forceps (a.k.a. "Laparoscopic Instruments")
+        mask[mask == 19] = 17 # conversion of Laparoscopic Scissors in Laparoscopic Fenestrated Forceps (a.k.a. "Laparoscopic Instruments")
+        mask[mask == 39] = 17 # conversion of Foam Extruder in Laparoscopic Fenestrated Forceps (a.k.a. "Laparoscopic Instruments")
+
+        return mask
+
     def __getitem__(self, i):
         # read image and mask
         #print('image: ', self.images[i])
         image = cv2.imread(self.images[i])
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         mask = cv2.imread(self.masks[i], 0)
+
+        mask = self.merge_classes(mask)
 
         # if we need the class "Other instruments"
         # N.B. in any case "Other instruments" class must be the last one of the self.classes list
@@ -96,7 +110,6 @@ class RAPN_Dataset(BaseDataset):
         # if we want to create a dataset for multiclass segmentation
         else:
             # separate the masks of the different classes and stack them
-            mask[mask == 2] = 31 #conversion of the Bulldog wire to Suture wire
             masks = [(mask == v) for v in self.class_values]
             mask = np.stack(masks, axis=-1).astype('float')
             sum = np.sum(mask, axis=2)

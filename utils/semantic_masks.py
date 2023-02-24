@@ -3,7 +3,7 @@ import numpy as np
 # binary
 color_mapping_2 = {
     0: (0, 0, 0),           # Background - BLACK
-    1: (0, 130, 200),       # Instruments
+    1: (0, 130, 200),      # Instruments
 }
 
 # Define the mapping of the classes to their respective color in RGB for the MULTICLASS_1 problem
@@ -16,7 +16,32 @@ color_mapping_8 = {
     4: (66, 62, 112),       # Monopolar Curved Scissors - DARK PURPLE
     5: (130, 1, 152),       # Suction - PURPLE
     6: (159, 89, 106),      # Large Needle Driver -
-    7: (92, 154, 27)        # Echography - DARK GREEN
+    7: (92, 154, 27),        # Echography - DARK GREEN
+}
+
+color_mapping_9 = {
+    0: (0, 0, 0),           # Background - BLACK
+    1: (209, 25, 30),       # Force Bipolar - RED
+    2: (24, 200, 59),       # Fenestrated Bipolar Forceps - GREEN
+    3: (242, 14, 138),      # Prograsp Forceps - MAGENTA
+    4: (66, 62, 112),       # Monopolar Curved Scissors - DARK PURPLE
+    5: (130, 1, 152),       # Suction - PURPLE
+    6: (159, 89, 106),      # Large Needle Driver -
+    7: (92, 154, 27),       # Echography - DARK GREEN
+    8: (255, 255, 255),     # Other instruments - WHITE
+}
+
+color_mapping_10 = {
+    0: (0, 0, 0),           # Background - BLACK
+    1: (209, 25, 30),       # Force Bipolar - RED
+    2: (24, 200, 59),       # Fenestrated Bipolar Forceps - GREEN
+    3: (242, 14, 138),      # Prograsp Forceps - MAGENTA
+    4: (66, 62, 112),       # Monopolar Curved Scissors - DARK PURPLE
+    5: (130, 1, 152),       # Suction - PURPLE
+    6: (159, 89, 106),      # Large Needle Driver -
+    7: (92, 154, 27),       # Echography - DARK GREEN
+    8: (255, 0, 0),
+    9: (255, 255, 255),     # Other instruments - WHITE
 }
 
 # Define the mapping of the classes to their respective color in RGB for the MULTICLASS problem (all classes)
@@ -77,6 +102,9 @@ color_mapping_22 = {
     21: (255, 255, 255),    # Other instruments -
 }
 
+# Define the mapping of the classes to their respective color in RGB for the MULTICLASS problem (all classes)
+# with the Hemostasis class
+# (build using class_mapping.json and config.json)
 color_mapping_21 = {
     0: (0, 0, 0),           # Background - BLACK
     1: (66, 62, 112),       # Monopolar Curved Scissors - DARK PURPLE
@@ -101,6 +129,93 @@ color_mapping_21 = {
     20: (255, 255, 255),    # Other instruments -
 }
 
+color_mapping_32 = {
+    0: (0, 0, 0),           # Background - BLACK
+    1: (66, 62, 112),       # Monopolar Curved Scissors - DARK PURPLE
+    2: (209, 25, 30),       # Force Bipolar - RED
+    3: (159, 89, 106),      # Large Needle Driver -
+    4: (130, 1, 152),       # Suction - PURPLE
+    5: (104, 135, 233),     # Suture wire -
+    6: (176, 82, 25),       # Hemolock Clip -
+    7: (24, 200, 59),       # Fenestrated Bipolar Forceps - GREEN
+    8: (15, 59, 240),       # Suture needle
+    9: (242, 14, 138),      # Prograsp Forceps - MAGENTA
+    10: (132, 8, 131),      # Vessel Loop -
+    11: (91, 240, 244),     # Cadiere Forceps -
+    12: (255, 0, 0),        # Hemostasis-
+    13: (189, 93, 206),     # Bulldog clamp -
+    14: (6, 243, 246),      # Da Vinci trocar -
+    15: (92, 154, 27),      # Echography - DARK GREEN
+    16: (179, 254, 6),      # Laparoscopic Fenestrated Forceps -
+    17: (180, 11, 137),     # Bulldog wire -
+    18: (6, 134, 50),       # Endobag -
+    19: (140, 222, 14),     # Hemolock Clip Applier -
+    20: (41, 38, 64),       # Laparoscopic Needle Driver -
+    21: (147, 199, 106),     # Airseal Trocar -
+    22: (8, 201, 90),       # Endobag wire -
+    23: (251, 98, 107),     # Endobag Specimen Retriever -
+    24: (205, 133, 25),     # Laparoscopic Clip Applier -  
+    25: (100, 156, 91),     # Drain -
+    26: (211, 44, 115),     # Foam -
+    27: (123, 208, 238),    # Metal clip -
+    28: (68, 162, 66),      # Surgical_Glove_Tip -
+    29: (192, 122, 96),     # Foam Extruder -
+    30: (172, 199, 12),     # Laparoscopic Scissors -
+    31: (233, 182, 202),    # Assistant Trocar -
+}
+
+
+# Define the mapping of the classes to their respective color in RGB for the MULTICLASS problem (all classes)
+# with the Hemostasis class and w/o Prograsp (merged to Cadiere)
+# (build using class_mapping.json and config.json)
+color_mapping_20 = {
+    0: (0, 0, 0),           # Background - BLACK
+    1: (66, 62, 112),       # Monopolar Curved Scissors - DARK PURPLE
+    2: (209, 25, 30),       # Force Bipolar - RED
+    3: (159, 89, 106),      # Large Needle Driver -
+    4: (130, 1, 152),       # Suction - PURPLE
+    5: (104, 135, 233),     # Suture wire -
+    6: (176, 82, 25),       # Hemolock Clip -
+    7: (24, 200, 59),       # Fenestrated Bipolar Forceps - GREEN
+    8: (15, 59, 240),       # Suture needle -
+    9: (132, 8, 131),       # Vessel Loop -
+    10: (91, 240, 244),     # Cadiere Forceps -
+    11: (255, 0, 0),        # Hemostasis-
+    12: (189, 93, 206),     # Bulldog clamp -
+    13: (6, 243, 246),      # Da Vinci trocar -
+    14: (92, 154, 27),      # Echography - DARK GREEN
+    15: (179, 254, 6),      # Laparoscopic Fenestrated Forceps -
+    16: (6, 134, 50),       # Endobag -
+    17: (140, 222, 14),     # Hemolock Clip Applier -
+    18: (41, 38, 64),       # Laparoscopic Needle Driver -
+    19: (255, 255, 255),    # Other instruments -
+}
+
+# Define the mapping of the classes to their respective color in RGB for the MULTICLASS problem (all classes)
+# with the Hemostasis class and w/o Prograsp (merged to Cadiere), and with 'Laparoscopic Instruments' class
+# (build using class_mapping.json and config.json)
+color_mapping_19 = {
+    0: (0, 0, 0),           # Background - BLACK
+    1: (66, 62, 112),       # Monopolar Curved Scissors - DARK PURPLE
+    2: (209, 25, 30),       # Force Bipolar - RED
+    3: (159, 89, 106),      # Large Needle Driver -
+    4: (130, 1, 152),       # Suction - PURPLE
+    5: (104, 135, 233),     # Suture wire -
+    6: (176, 82, 25),       # Hemolock Clip -
+    7: (24, 200, 59),       # Fenestrated Bipolar Forceps - GREEN
+    8: (15, 59, 240),       # Suture needle -
+    9: (132, 8, 131),       # Vessel Loop -
+    10: (91, 240, 244),     # Cadiere Forceps -
+    11: (255, 0, 0),        # Hemostasis-
+    12: (189, 93, 206),     # Bulldog clamp -
+    13: (6, 243, 246),      # Da Vinci trocar -
+    14: (92, 154, 27),      # Echography - DARK GREEN
+    15: (179, 254, 6),      # Laparoscopic Instruments -
+    16: (6, 134, 50),       # Endobag -
+    17: (140, 222, 14),     # Hemolock Clip Applier -
+    18: (255, 255, 255),    # Other instruments -
+}
+
 def class2color(mask, n):
     """
     Function which generates a colored mask based on the input class value mask
@@ -112,12 +227,22 @@ def class2color(mask, n):
         color_mapping = color_mapping_2
     elif n == 8:
         color_mapping = color_mapping_8
+    elif n == 9:
+        color_mapping = color_mapping_9
+    elif n == 10:
+        color_mapping = color_mapping_10
+    elif n == 19:
+        color_mapping = color_mapping_19
+    elif n == 20:
+        color_mapping = color_mapping_20
     elif n == 21:
         color_mapping = color_mapping_21
     elif n == 22:
         color_mapping = color_mapping_22
     elif n == 23:
         color_mapping = color_mapping_23
+    elif n == 32:
+        color_mapping = color_mapping_32
     else:
         return None
 

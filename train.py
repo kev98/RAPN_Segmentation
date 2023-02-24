@@ -39,19 +39,18 @@ LEARNING_RATE = 5e-4
 PATIENCE = 15
 
 # Definition of the segmentation classes
+# Binary 
 #classes = ["Background", "Instrument"]
-classes = ['Tissue', 'Force Bipolar', 'Fenestrated Bipolar Forceps', 'Prograsp Forceps', 'Monopolar Curved Scissors',
-           'Suction', 'Large Needle Driver', 'Echography']
-#classes = ['Tissue', 'Monopolar Curved Scissors', 'Force Bipolar', 'Large Needle Driver', 'Suction',
-#           'Suture wire', 'Hemolock Clip', 'Fenestrated Bipolar Forceps', 'Suture needle', 'Prograsp Forceps',
-#           'Vessel Loop', 'Cadiere Forceps', 'Gauze', 'Bulldog clamp', 'Da Vinci trocar', 'Echography',
-#           'Laparoscopic Fenestrated Forceps', 'Bulldog wire', 'Endobag', 'Veriset', 'Hemolock Clip Applier',
-#           'Laparoscopic Needle Driver']
+# Multiclass 1 (with or w/o 'Other instruments', with or w/o 'Cadiere Forceps')
+#classes = ['Tissue', 'Force Bipolar', 'Fenestrated Bipolar Forceps', 'Prograsp Forceps', 'Monopolar Curved Scissors',
+#           'Suction', 'Large Needle Driver', 'Echography', 'Cadiere Forceps', 'Other instruments']
+# Multiclass 2 (with or w/o 'Other instruments')
 #classes = ['Tissue', 'Monopolar Curved Scissors', 'Force Bipolar', 'Large Needle Driver', 'Suction',
 #           'Suture wire', 'Hemolock Clip', 'Fenestrated Bipolar Forceps', 'Suture needle', 'Prograsp Forceps',
 #           'Vessel Loop', 'Cadiere Forceps', 'Gauze', 'Bulldog clamp', 'Da Vinci trocar', 'Echography',
 #           'Laparoscopic Fenestrated Forceps', 'Endobag', 'Veriset', 'Hemolock Clip Applier',
 #           'Laparoscopic Needle Driver', 'Other instruments']
+# Multiclass all classes
 #classes = ['Tissue', 'Monopolar Curved Scissors', 'Force Bipolar', 'Large Needle Driver', 'Suction',
 #           'Suture wire', 'Hemolock Clip', 'Fenestrated Bipolar Forceps', 'Suture needle', 'Prograsp Forceps',
 #           'Vessel Loop', 'Cadiere Forceps', 'Gauze', 'Bulldog clamp', 'Da Vinci trocar', 'Echography',
@@ -59,13 +58,29 @@ classes = ['Tissue', 'Force Bipolar', 'Fenestrated Bipolar Forceps', 'Prograsp F
 #           'Laparoscopic Needle Driver', 'Airseal trocar', 'Endobag wire', 'Endobag specimen retriever',
 #           'Laparoscopic Clip Applier', 'Drain', 'Metal clip', 'Laparoscopic Scissors', 'Foam extruder',
 #           'Assistant trocar', 'Fibrilar', 'Left PBP Needle Driver']
+# Multiclass 14 classes of Francesco
 #classes = ['Tissue', 'Monopolar Curved Scissors', 'Hemolock Clip', 'Fenestrated Bipolar Forceps', 'Suction', 'Large Needle Driver', 'Suture wire',
 #                    'Vessel Loop', 'Suture needle', 'Bulldog clamp', 'Echography', 'Laparoscopic Clip Applier', 'Gauze', 'Endobag']
+# Multiclass 2 new (with 'Hemostasis') (with or w/0 'Other instruments)
+#classes = ['Tissue', 'Monopolar Curved Scissors', 'Force Bipolar', 'Large Needle Driver', 'Suction',
+#           'Suture wire', 'Hemolock Clip', 'Fenestrated Bipolar Forceps', 'Suture needle', 'Prograsp Forceps',
+#           'Vessel Loop', 'Cadiere Forceps', 'Hemostasis', 'Bulldog clamp', 'Da Vinci trocar', 'Echography',
+#           'Laparoscopic Fenestrated Forceps', 'Endobag', 'Hemolock Clip Applier',
+#           'Laparoscopic Needle Driver', 'Other instruments']
+# Multiclass all classes new (with 'Hemostasis')
+#classes = ['Tissue', 'Monopolar Curved Scissors', 'Force Bipolar', 'Large Needle Driver', 'Suction',
+#           'Suture wire', 'Hemolock Clip', 'Fenestrated Bipolar Forceps', 'Suture needle', 'Prograsp Forceps',
+#           'Vessel Loop', 'Cadiere Forceps', 'Hemostasis', 'Bulldog clamp', 'Da Vinci trocar', 'Echography',
+#           'Laparoscopic Fenestrated Forceps', 'Bulldog wire', 'Endobag', 'Hemolock Clip Applier',
+#           'Laparoscopic Needle Driver', 'Airseal trocar', 'Endobag wire', 'Endobag specimen retriever',
+#           'Laparoscopic Clip Applier', 'Drain', 'Foam', 'Metal clip', 'Surgical_Glove_Tip', 'Foam extruder',
+#           'Laparoscopic Scissors', 'Assistant trocar']
+# First experiment of mergigng 
 classes = ['Tissue', 'Monopolar Curved Scissors', 'Force Bipolar', 'Large Needle Driver', 'Suction',
-           'Suture wire', 'Hemolock Clip', 'Fenestrated Bipolar Forceps', 'Suture needle', 'Prograsp Forceps',
+           'Suture wire', 'Hemolock Clip', 'Fenestrated Bipolar Forceps', 'Suture needle',
            'Vessel Loop', 'Cadiere Forceps', 'Hemostasis', 'Bulldog clamp', 'Da Vinci trocar', 'Echography',
-           'Laparoscopic Fenestrated Forceps', 'Endobag', 'Hemolock Clip Applier',
-           'Laparoscopic Needle Driver', 'Other instruments']
+           'Laparoscopic Fenestrated Forceps', 'Endobag', 'Hemolock Clip Applier', 'Other instruments']
+
 #Choose the encoder and the segmentation model
 ENCODER = config['encoder']  # encoder
 ENCODER_WEIGHTS = 'imagenet'  # pretrained weights
@@ -77,8 +92,8 @@ MODEL_NAME = config['model']  # segmentation model
 # DATA ROOT
 if PLATFORM == "server":
     DATA_DIR = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN_tris"
-    out_dir = r"/home/kmarc/workspace/nas_private/RAPN_results_final/base_model/multiclass_1" + \
-              f"/{MODEL_NAME}{ENCODER}_bs{BATCH_SIZE}_lr{LEARNING_RATE}_{LOSS}"
+    out_dir = r"/home/kmarc/workspace/nas_private/RAPN_results_final/base_model/multiclass_all" + \
+              f"/{MODEL_NAME}{ENCODER}_bs{BATCH_SIZE}_lr{LEARNING_RATE}_{LOSS}_merge19cl"
     train_dir = os.path.join(DATA_DIR, 'train')
     valid_dir = os.path.join(DATA_DIR, 'val')
     test_dir = os.path.join(DATA_DIR, 'test')
@@ -102,7 +117,7 @@ def main():
             encoder_weights=ENCODER_WEIGHTS,
             classes=len(classes),
             activation=ACTIVATION,
-            aux_params={'classes': len(classes), 'dropout': 0.476}
+            aux_params={'classes': len(classes), 'dropout': 0.386}
         )
     elif MODEL_NAME == 'DeepLabV3+':
         model = smp.DeepLabV3Plus(
@@ -192,7 +207,7 @@ def main():
     ]
 
     # OPTIMIZER (you can set here the starting learning rate)
-    optimizer = torch.optim.RMSprop([
+    optimizer = torch.optim.Adam([
         dict(params=model.parameters(), lr=LEARNING_RATE),
     ])
 

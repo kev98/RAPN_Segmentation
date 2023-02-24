@@ -58,7 +58,7 @@ if PLATFORM == "server":
     train_dir = os.path.join(DATA_DIR, 'train')
     valid_dir = os.path.join(DATA_DIR, 'test')
 elif PLATFORM == "local":
-    DATA_DIR = r"/Volumes/TOSHIBA EXT/DSAD_Dataset/" + main_classs
+    DATA_DIR = r"/Volumes/TOSHIBA EXT/DSAD_Dataset/" + main_class
     out_dir = r"/Users/kevinmarchesini/Desktop/Internship @ Orsi Academy/DSAD_results_binary" + \
               f"/{main_class}/{MODEL_NAME}{ENCODER}_bs{BATCH_SIZE}_lr{LEARNING_RATE}_{LOSS}"
     train_dir = os.path.join(DATA_DIR, '')
@@ -164,7 +164,7 @@ def main():
 
     # SCHEDULER for the reduction of the learning rate when the learning stagnates
     # namely when the valid loss doesn't decrease for a fixed amount of epochs
-    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience=5, threshold=2e-4,
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience=5, threshold=5e-4,
                                                            factor=0.7, verbose=True)
 
     # create epoch runners
