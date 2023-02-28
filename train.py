@@ -75,11 +75,16 @@ PATIENCE = 15
 #           'Laparoscopic Needle Driver', 'Airseal trocar', 'Endobag wire', 'Endobag specimen retriever',
 #           'Laparoscopic Clip Applier', 'Drain', 'Foam', 'Metal clip', 'Surgical_Glove_Tip', 'Foam extruder',
 #           'Laparoscopic Scissors', 'Assistant trocar']
-# First experiment of mergigng 
+# First experiment of merging (20 classes)
 classes = ['Tissue', 'Monopolar Curved Scissors', 'Force Bipolar', 'Large Needle Driver', 'Suction',
            'Suture wire', 'Hemolock Clip', 'Fenestrated Bipolar Forceps', 'Suture needle',
            'Vessel Loop', 'Cadiere Forceps', 'Hemostasis', 'Bulldog clamp', 'Da Vinci trocar', 'Echography',
-           'Laparoscopic Fenestrated Forceps', 'Endobag', 'Hemolock Clip Applier', 'Other instruments']
+           'Laparoscopic Fenestrated Forceps', 'Endobag', 'Hemolock Clip Applier', 'Laparoscopic Needle Driver']
+# Second experiment of merging (19 classses)
+#classes = ['Tissue', 'Monopolar Curved Scissors', 'Force Bipolar', 'Large Needle Driver', 'Suction',
+#           'Suture wire', 'Hemolock Clip', 'Fenestrated Bipolar Forceps', 'Suture needle',
+#           'Vessel Loop', 'Cadiere Forceps', 'Hemostasis', 'Bulldog clamp', 'Da Vinci trocar', 'Echography',
+#           'Laparoscopic Fenestrated Forceps', 'Endobag', 'Hemolock Clip Applier', 'Other instruments']
 
 #Choose the encoder and the segmentation model
 ENCODER = config['encoder']  # encoder
@@ -93,7 +98,7 @@ MODEL_NAME = config['model']  # segmentation model
 if PLATFORM == "server":
     DATA_DIR = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN_tris"
     out_dir = r"/home/kmarc/workspace/nas_private/RAPN_results_final/base_model/multiclass_all" + \
-              f"/{MODEL_NAME}{ENCODER}_bs{BATCH_SIZE}_lr{LEARNING_RATE}_{LOSS}_merge19cl"
+              f"/{MODEL_NAME}{ENCODER}_bs{BATCH_SIZE}_lr{LEARNING_RATE}_{LOSS}_merge20"
     train_dir = os.path.join(DATA_DIR, 'train')
     valid_dir = os.path.join(DATA_DIR, 'val')
     test_dir = os.path.join(DATA_DIR, 'test')
@@ -126,7 +131,7 @@ def main():
             encoder_output_stride=16,
             classes=len(classes),
             activation=ACTIVATION,
-            aux_params={'classes': len(classes), 'dropout': 0.43}
+            aux_params={'classes': len(classes), 'dropout': 0.386}
         )
     elif MODEL_NAME == 'Unet++':
         model = smp.UnetPlusPlus(
