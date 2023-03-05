@@ -1,5 +1,4 @@
 import sys
-
 import numpy as np
 import torch
 from tqdm import tqdm as tqdm
@@ -105,7 +104,7 @@ class TrainEpoch(Epoch):
     def batch_update(self, x, y, IoU):
         self.optimizer.zero_grad()
         prediction = self.model.forward(x)
-        # + self.loss2(prediction, y)
+
         if type(prediction) is tuple:
             pred = prediction[0]
         else:
@@ -121,7 +120,7 @@ class TrainEpoch(Epoch):
         return loss, prediction, None
 
 
-# Validation epoch: forward --> compute loss (to understand overfitting) --> compute metrics
+# Validation epoch: forward --> compute loss (to evaluate the evolution of the training) --> compute metrics
 class ValidEpoch(Epoch):
 
     def __init__(self, model, loss, loss2, metrics, classes, device='cpu', verbose=True):
@@ -142,7 +141,6 @@ class ValidEpoch(Epoch):
     def batch_update(self, x, y, IoU):
         with torch.no_grad():
             prediction = self.model.forward(x)
-            # + self.loss2(prediction, y)
 
             if type(prediction) is tuple:
                 pred = prediction[0]

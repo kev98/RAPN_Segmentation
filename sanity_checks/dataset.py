@@ -42,6 +42,8 @@ class RAPN_Dataset(BaseDataset):
         mapping = json_file["labels"]
         self.class_values = []
         self.other_label = json_file['classes'] + 1
+
+        # create a list with the correspondent value of the classes in the mask
         if len(classes) == 2:
             self.class_values.append(0)
             self.class_values.append(1)

@@ -1,10 +1,10 @@
+# Script to compute the classes' occurences and distribution of a specific set of the final dataset
+
 import cv2
 import glob
 from alive_progress import alive_bar
-import json
 import numpy as np
 import pandas as pd
-import os
 from scipy.spatial import distance
 
 
@@ -19,6 +19,7 @@ def main():
     #class_distribution = [30261, 1360, 762, 1874, 11, 61, 784, 117, 217, 5665, 18, 15239, 1500, 536, 7717, 352, 99, 936,
     #                      470, 30, 12650, 1, 0, 60, 22938, 4464, 0, 6, 12130, 37, 5109, 8035, 712, 3035, 0, 1031, 1093,
     #                      22, 244, 31]
+    # class occurences in the entire final dataset
     class_distribution = [31811, 1462, 823, 2402, 0, 78, 811, 112, 236, 7099, 0, 15277, 2160, 580, 8058, 0, 86, 974,
                           503, 29, 12757, 0, 0, 62, 24062, 4205, 0, 0, 12437, 39, 5203, 8166, 0, 3411, 0, 1060, 1136,
                           15, 291, 33, 76, 0]
@@ -26,7 +27,8 @@ def main():
     #masks = glob.glob(source_folder + '/masks/*/*.png')
     #masks.sort()
 
-    count_classes = [0 for i in range(0, 42)]
+    num_classes = 42  # number of classes (can change)
+    count_classes = [0 for i in range(0, num_classes)]
     masks = glob.glob(source_folder + '/*/*.png')
     masks.sort()
 
@@ -47,7 +49,9 @@ def main():
             # Update the progress bar
             bar()
 
-    dist = distance.euclidean([i/3180 for i in count_classes], [i/31812 for i in class_distribution])
+    set_images = 3180 # images in the set we are evaluating
+    dataset_images = 31812 # total numbber of images in the entire final dataset
+    dist = distance.euclidean([i/set_images for i in count_classes], [i/dataset_images for i in class_distribution])
 
     # ordered list of all the classes
     '''classes_list =['Background', 'Bulldog clamp', 'Bulldog wire', 'Cadiere Forceps', 'Catheter',

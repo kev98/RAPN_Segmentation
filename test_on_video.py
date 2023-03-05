@@ -1,15 +1,11 @@
 import os
-
 import cv2
 import segmentation_models_pytorch as smp
 import torch
 from alive_progress import alive_bar
-
 from utils.semantic_masks import class2color
-#from crop_img import crop
 import time
 import numpy as np
-
 from utils.albumentation import get_preprocessing
 
 IMAGE_HEIGHT = 512
@@ -109,6 +105,7 @@ with alive_bar(num_frames) as bar:
             image = torch.tensor(preprocessing(image=frame)['image']).unsqueeze(0).to(DEVICE)
             #result = torch.bitwise_not(model.predict(image)[0] > 0.5).float().cpu().detach().numpy()[0] # if use Jente's moodel
             result = np.argmax(model.predict(image)[0].cpu().squeeze(), axis=0) # if use my model
+
             # Convert the masked in a colored masks
             fr = class2color(result, len(classes))
 

@@ -1,7 +1,8 @@
+# Script to compute the classes' occurences of each procedure in the final dataset (one-channel masks)
+
 import cv2
 import glob
 from alive_progress import alive_bar
-import json
 import numpy as np
 import pandas as pd
 import os
@@ -23,10 +24,11 @@ def main():
     #masks.sort()
 
     tot_count = []
+    num_classes = 42  # number of classes (can change)
 
     with alive_bar(len(dir_list)) as bar:
         for dir in dir_list:
-            count_classes = [0 for i in range(0, 42)]
+            count_classes = [0 for i in range(0, num_classes)]
             masks = glob.glob(os.path.join(source_folder,'*', 'masks', dir) + '/*.png')
             masks.sort()
             for mask_path in masks:

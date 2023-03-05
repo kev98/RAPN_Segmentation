@@ -6,12 +6,10 @@ import os.path
 import cv2
 import glob
 from alive_progress import alive_bar
-import json
 import sys
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
 sys.path.append(parent)
-from utils.semantic_masks import color2class
 
 
 # Function which crop the part of the image we are interested in
@@ -28,6 +26,7 @@ def main():
     source_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN_2/train"
     #source_folder = r"/Volumes/ORSI/Kevin/Segmentation_Dataset_RAPN_2/train"
 
+    # List of procedures in which is present the HUD
     procedures = ['RAPN7', 'RAPN8', 'RAPN10', 'RAPN11', 'RAPN12', 'RAPN33', 'RAPN34', 'RAPN35',
                   'RAPN36', 'RAPN37', 'RAPN38', 'RAPN39', 'RAPN41', 'RAPN54', 'RAPN61', 'RAPN62',
                   'RAPN76', 'RAPN77', 'RAPN78', 'RAPN79', 'RAPN81', 'RAPN82', 'RAPN85', 'RAPN86',

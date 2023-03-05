@@ -1,6 +1,5 @@
 import os
 import argparse
-
 import numpy as np
 import torch
 import pandas as pd
@@ -38,7 +37,7 @@ PROFILE = config['profile']
 LEARNING_RATE = 5e-4
 PATIENCE = 15
 
-# Definition of the segmentation classes
+# Definition of the segmentation classes based on the model you want to train
 # Binary 
 #classes = ["Background", "Instrument"]
 # Multiclass 1 (with or w/o 'Other instruments', with or w/o 'Cadiere Forceps')
@@ -92,7 +91,7 @@ ENCODER_WEIGHTS = 'imagenet'  # pretrained weights
 CLASSES = classes
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 MODEL_NAME = config['model']  # segmentation model
-#classification_params = {'classes': 2, 'dropout': 0.3}
+#classification_params = {'classes': 2, 'dropout': 0.3} # auxiliary parameters
 
 # DATA ROOT
 if PLATFORM == "server":
@@ -148,18 +147,15 @@ def main():
     # define preprocessing function
     #preprocessing_fn = smp.encoders.get_preprocessing_fn(ENCODER, ENCODER_WEIGHTS)
     preprocessing_fn = smp.encoders.get_preprocessing_fn('timm-mobilenetv3_large_100', ENCODER_WEIGHTS)
+
+    # Load an existing model
     #model.load_state_dict(torch.load("/home/kmarc/workspace/nas_private/RAPN_results/base_model/Francesco_model/tu-efficientnetv2_rw_s-FPN_14cl.pth"))
+
     model.to(DEVICE)
 
     # Get information about model
     if PROFILE:
         network_stats(model, DEVICE, BATCH_SIZE)
-
-    # Get information about model complexity: number of parameters and multiply - accumulate
-    # operations per second
-    # macs, params = get_model_complexity_info(model, (1, 3, 512, 512), as_strings=True,
-    #                                        print_per_layer_stat=False, verbose=True)
-    # print(macs, params)
 
     # TRAINING SET
     train_dataset = RAPN_Dataset(
@@ -177,7 +173,7 @@ def main():
         preprocessing=get_preprocessing(preprocessing_fn),
     )
 
-    # TRAINING SET
+    # TEST SET
     test_dataset = RAPN_Dataset(
         test_dir,
         classes=CLASSES,
@@ -187,42 +183,38 @@ def main():
 
     #print(train_dataset.__getitem__(0)[1].shape)
 
-    # TRAIN AND VALIDATION LOADER
+    # TRAIN, VALIDATION AND TEST LOADER
     train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=8, drop_last=True)
     valid_loader = DataLoader(valid_dataset, batch_size=1, shuffle=False, num_workers=4)
     test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False, num_workers=4)
 
     # LOSSES (2 losses if you want to experience with a combination of losses, otherwise just pass None)
     if LOSS == 'focal':
-        #loss = FocalLoss() implementation of loss previously used by Francesco's
         loss = smp.losses.FocalLoss(mode='multiclass', gamma=2.5)
         loss2 = None
     elif LOSS == 'dice':
-        #loss = GDiceLoss() implementation of loss previously used by Francesco's
         loss = smp.losses.DiceLoss(mode='multiclass', smooth=1e-5)
         loss2 = None
     elif LOSS == "focaldice":
         loss = smp.losses.FocalLoss(mode='multiclass', gamma=2.5)
         loss2 = smp.losses.DiceLoss(mode='multiclass', smooth=1e-5)
-        #loss = FocalLoss() implementation of loss previously used by Francesco's
-        #loss2 = GDiceLossV2() implementation of loss previously used by Francesco's
 
     metrics = [
         # smp.utils.metrics.IoU(threshold=0.5),
     ]
 
-    # OPTIMIZER (you can set here the starting learning rate)
+    # OPTIMIZER (here is set the starting learning rate)
     optimizer = torch.optim.Adam([
         dict(params=model.parameters(), lr=LEARNING_RATE),
     ])
 
     # SCHEDULER for the reduction of the learning rate when the learning stagnates
-    # namely when the valid loss doesn't decrease for a fixed amount of epochs
+    # namely when the valid loss doesn't decrease of a certain threshold for a fixed amount of epochs (patience)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience=5, threshold=1e-4,
                                                            factor=0.7, verbose=True)
 
     # create epoch runners
-    # it is a simple loop of iterating over dataloader`s samples
+    # an epoch is a loop which iterates over dataloader`s samples
     train_epoch = TrainEpoch(
         model,
         loss=loss,
@@ -234,6 +226,7 @@ def main():
         verbose=True,
     )
 
+    # the validation epoch is used both for the validation and the test set
     valid_epoch = ValidEpoch(
         model,
         loss=loss,
@@ -244,10 +237,10 @@ def main():
         classes=classes
     )
 
-    results_df = pd.DataFrame()
-    es_counter = 0
-    optimal_val_loss = 1000
-    max_score = 0
+    results_df = pd.DataFrame() # dataframe where the statistics of the training are written
+    es_counter = 0 # Early-Stopping counter
+    optimal_val_loss = 1000 # min value of the loss
+    max_score = 0 # max value of the mean IoU
 
     # train model for N epochs
     for i in range(1, NUM_EPOCHS + 1):
@@ -259,14 +252,17 @@ def main():
         # Run a validation epoch
         valid_logs, valid_iou, valid_dice = valid_epoch.run(valid_loader)
 
-        # Every epoch, compute the results and saves them into a dataframe
+        # Every epoch (or every n epochs), compute the results and saves them into a dataframe
         if (i % 1) == 0:
-            #save = True if i == NUM_EPOCHS else False
+            #save = True if i == NUM_EPOCHS else False # remove comment if you don't have a test set
             save = False
+            # Compute the statistics of the epoch
             IoU, inference_time, FBetaScore, DiceScore = saveResults(valid_loader, model, len(classes), PLATFORM,
                                                                      ENCODER, MODEL_NAME, out_dir, save_img=save)
+            # Create a Dataframe with the statistics
             curr_res = create_dataframe(model, i, IoU, inference_time, FBetaScore, classes,
                                         train_logs, valid_logs, DiceScore)
+
             results_df = pd.concat([results_df, curr_res])
             results_df.to_excel(out_dir + '/' + ENCODER + '-' + MODEL_NAME + f'-{NUM_EPOCHS}' + 'ce' + '.xlsx')
         else:
@@ -276,8 +272,6 @@ def main():
         if SAVE_CRITERION == "validation_loss":
             if valid_logs['loss'] < optimal_val_loss:
                 optimal_val_loss = valid_logs['loss']
-                # optimal_val_acc = np.mean(IoU)
-                # optimal_epoch = i+1
                 es_counter = 0
                 torch.save(model.state_dict(), out_dir + '/' + ENCODER + '-' + MODEL_NAME +
                            f'-{NUM_EPOCHS}' + 'ce' + '.pth')
@@ -285,6 +279,7 @@ def main():
             else:
                 es_counter += 1
                 print(f"EarlyStopping-counter = {es_counter}")
+
         # update the model if the mean IoU is increased
         elif SAVE_CRITERION == "mean_IoU":
             curr_mean_IoU = np.mean(IoU)
@@ -299,19 +294,22 @@ def main():
                 es_counter += 1
                 print(f"EarlyStopping-counter = {es_counter}")
 
+        # Stop the training if the PATIENCE is reached
         if es_counter >= PATIENCE:
             print(f"EARLY STOPPING... TRAINING IS STOPPED")
             break
 
+        # Print IoU of each class
         for c in range(len(CLASSES)):
             print(CLASSES[c], IoU[c])
 
-        scheduler.step(valid_logs['loss'])
+        scheduler.step(valid_logs['loss']) # a scheduler step based on the validation loss
         print('Ready for the next epoch')
 
         del train_logs, valid_logs, IoU
 
-    # REMOVE COMMENTOF THE FOLLOWING 5 LINES IF YOU HAVE THE TEST SET
+    # REMOVE COMMENT OF THE FOLLOWING 5 LINES IF YOU HAVE THE TEST SET
+    # Run a test epoch
     test_logs, test_iou, test_dice = valid_epoch.run(test_loader)
     IoU, inference_time, FBetaScore, DiceScore = saveResults(test_loader, model, len(classes), PLATFORM, ENCODER,
                                                              MODEL_NAME, out_dir, save_img=True)

@@ -1,4 +1,4 @@
-# Script to compute the classes' distribution of the entire dataset
+# Script to compute the classes' distribution of the entire dataset with colored masks
 
 import cv2
 import glob
@@ -36,7 +36,8 @@ def main():
     masks = glob.glob(source_folder + '/masks/*/*.png')
     masks.sort()
 
-    count_classes = [0 for i in range(1, 40)]
+    num_classes = 40  # number of classes (can change)
+    count_classes = [0 for i in range(1, num_classes)]
 
     with alive_bar(len(masks)) as bar:
         for mask_path in masks:

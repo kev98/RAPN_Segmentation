@@ -1,7 +1,8 @@
+# Script to compute the classes' occurences and distribution of the final dataset (one-channel masks)
+
 import cv2
 import glob
 from alive_progress import alive_bar
-import json
 import numpy as np
 import pandas as pd
 

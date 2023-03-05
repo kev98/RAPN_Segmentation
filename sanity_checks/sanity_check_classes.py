@@ -1,3 +1,8 @@
+"""
+Script perform a sanity check of the labels on the main classes using the IoU
+of the multiclass model (the most accurate one with 8 classes) on the single images of the dataset
+"""
+
 import os
 import argparse
 import sys
@@ -10,7 +15,7 @@ import pandas as pd
 import segmentation_models_pytorch as smp
 from dataset import RAPN_Dataset
 from torch.utils.data import DataLoader
-from utils.albumentation import get_training_augmentation, get_preprocessing, get_validation_augmentation
+from utils.albumentation import get_preprocessing, get_validation_augmentation
 import tqdm
 
 # Parse input argument
@@ -28,29 +33,11 @@ LEARNING_RATE = 3e-4
 PATIENCE = 15
 
 # Definition of the segmentation classes
+# (see the train_model.py for the entire lists of classes)
 #classes = ["Background", "Instrument"]
 classes = ['Tissue', 'Force Bipolar', 'Fenestrated Bipolar Forceps', 'Prograsp Forceps', 'Monopolar Curved Scissors',
            'Suction', 'Large Needle Driver', 'Echography']
-iou_th = [0.7, 0.3, 0.3, 0, 0.3, 0.3, 0.3, 0.3]
-#classes = ['Tissue', 'Monopolar Curved Scissors', 'Force Bipolar', 'Large Needle Driver', 'Suction',
-#           'Suture wire', 'Hemolock Clip', 'Fenestrated Bipolar Forceps', 'Suture needle', 'Prograsp Forceps',
-#           'Vessel Loop', 'Cadiere Forceps', 'Gauze', 'Bulldog clamp', 'Da Vinci trocar', 'Echography',
-#           'Laparoscopic Fenestrated Forceps', 'Bulldog wire', 'Endobag', 'Veriset', 'Hemolock Clip Applier',
-#           'Laparoscopic Needle Driver']
-#classes = ['Tissue', 'Monopolar Curved Scissors', 'Force Bipolar', 'Large Needle Driver', 'Suction',
-#           'Suture wire', 'Hemolock Clip', 'Fenestrated Bipolar Forceps', 'Suture needle', 'Prograsp Forceps',
-#           'Vessel Loop', 'Cadiere Forceps', 'Gauze', 'Bulldog clamp', 'Da Vinci trocar', 'Echography',
-#           'Laparoscopic Fenestrated Forceps', 'Bulldog wire', 'Endobag', 'Veriset', 'Hemolock Clip Applier',
-#           'Laparoscopic Needle Driver', 'Other instruments']
-#classes = ['Tissue', 'Monopolar Curved Scissors', 'Force Bipolar', 'Large Needle Driver', 'Suction',
-#           'Suture wire', 'Hemolock Clip', 'Fenestrated Bipolar Forceps', 'Suture needle', 'Prograsp Forceps',
-#           'Vessel Loop', 'Cadiere Forceps', 'Gauze', 'Bulldog clamp', 'Da Vinci trocar', 'Echography',
-#           'Laparoscopic Fenestrated Forceps', 'Bulldog wire', 'Endobag', 'Veriset', 'Hemolock Clip Applier',
-#           'Laparoscopic Needle Driver', 'Airseal trocar', 'Endobag wire', 'Endobag specimen retriever',
-#           'Laparoscopic Clip Applier', 'Drain', 'Metal clip', 'Laparoscopic Scissors', 'Foam extruder',
-#           'Assistant trocar', 'Fibrilar', 'Left PBP Needle Driver']
-#classes = ['Tissue', 'Monopolar Curved Scissors', 'Hemolock Clip', 'Fenestrated Bipolar Forceps', 'Suction', 'Large Needle Driver', 'Suture wire',
-#                    'Vessel Loop', 'Suture needle', 'Bulldog clamp', 'Echography', 'Laparoscopic Clip Applier', 'Gauze', 'Endobag']
+iou_th = [0.7, 0.3, 0.3, 0, 0.3, 0.3, 0.3, 0.3] # Threshold on the IoU of each class
 
 #Choose the encoder and the segmentation model
 ENCODER = config['encoder']  # encoder

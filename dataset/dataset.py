@@ -42,6 +42,8 @@ class RAPN_Dataset(BaseDataset):
         mapping = json_file["labels"]
         self.class_values = []
         self.other_label = json_file['classes'] - 1
+
+        # create a list with the correspondent value of the classes in the mask
         if len(classes) == 2:
             self.class_values.append(0)
             self.class_values.append(1)
@@ -74,6 +76,7 @@ class RAPN_Dataset(BaseDataset):
         self.augmentation = augmentation
         self.preprocessing = preprocessing
 
+    # Function to set the way in which the classes has to be merged "online"
     def merge_classes(self, mask):
         mask[mask == 2] = 31 # conversion of the Bulldog wire in Suture wire
         mask[mask == 8] = 31 # conversion of the Endobag wire in Suture wire

@@ -1,3 +1,7 @@
+"""
+Script to serach in which images of a specific procedure a class is present
+"""
+
 import os
 import glob
 import cv2

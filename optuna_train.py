@@ -171,7 +171,7 @@ def objective(trial):
     valid_loader = DataLoader(valid_dataset, batch_size=1, shuffle=False, num_workers=4)
 
     # SCHEDULER for the reduction of the learning rate when the learning stagnates
-    # namely when the train loss doesn't decrease for a fixed amount of epochs
+    # namely when the valid loss doesn't decrease of a certain threshold for a fixed amount of epochs (patience)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience=5, threshold=5e-4,
                                                            factor=0.2, verbose=True)
 
@@ -180,7 +180,7 @@ def objective(trial):
     ]
 
     # create epoch runners
-    # it is a simple loop of iterating over dataloader`s samples
+    # an epoch is a loop which iterates over dataloader`s samples
     train_epoch = TrainEpoch(
         model,
         loss=loss,

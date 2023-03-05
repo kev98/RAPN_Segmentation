@@ -1,23 +1,15 @@
 import os
 import argparse
-
 import numpy as np
 import torch
 import pandas as pd
 import segmentation_models_pytorch as smp
-from utils.albumentation import get_training_augmentation, get_preprocessing, get_validation_augmentation
+from utils.albumentation import get_preprocessing, get_validation_augmentation
 from dataset.dataset import RAPN_Dataset
 from torch.utils.data import DataLoader
-from utils.helper_functions import saveResults, network_stats, create_dataframe, create_testdataframe
-from utils.focalLoss import FocalLoss
-from epoch import TrainEpoch, ValidEpoch
-from utils.diceLoss import GDiceLoss, GDiceLossV2
-import matplotlib.pyplot as plt
 import sys
 from tqdm import tqdm as tqdm
 from torchmetrics import ConfusionMatrix
-import cv2
-from utils.semantic_masks import class2color
 
 # Parse input argument
 parser = argparse.ArgumentParser(description="Network for segmentation in RAPN",
@@ -121,6 +113,8 @@ def main():
 
     # define preprocessing function
     preprocessing_fn = smp.encoders.get_preprocessing_fn('timm-mobilenetv3_large_100', ENCODER_WEIGHTS)
+
+    # Load an trained model
     model.load_state_dict(torch.load("/home/kmarc/workspace/nas_private/RAPN_results/base_model/multiclass_all/FPNtu-efficientnetv2_rw_s_bs16_lr0.0003_focaldiceallall/tu-efficientnetv2_rw_s-FPN-30ce.pth"))
     model.to(DEVICE)
     model.eval()
@@ -143,7 +137,7 @@ def main():
 
     #print(train_dataset.__getitem__(0)[1].shape)
 
-    # TRAIN AND VALIDATION LOADER
+    # VALIDATION AND TEST LOADER
     valid_loader = DataLoader(valid_dataset, batch_size=1, shuffle=False, num_workers=4)
     test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False, num_workers=4)
 
