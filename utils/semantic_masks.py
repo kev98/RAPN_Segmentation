@@ -321,9 +321,50 @@ def color2class(color_mask, class_color_mapping):
     return mask
 
 
+def color2classopt(color_mask, class_color_mapping):
+    """
+    Function which generates a class value mask based on the input colored mask
+    :param color_mask: A mask where each class has its own color
+           class_color_mapping: A dictionary which maps each color into a class
+    :return: A mask where each class has its own integer value
+    """
+
+    # Initialize a blank image
+    width, height = color_mask.shape[:-1]
+    #color_mask[818][:] = (12, 23, 100)
+
+    for col, cl in class_color_mapping.items():
+        #print(eval(col)[::-1], cl)
+        #print('before', color_mask[818][700])
+        color_mask[np.all(color_mask == eval(col)[::-1], axis=-1)] = (cl, cl, cl)
+        #print('after', color_mask[818][700])
+    #color_mask[np.all(color_mask[:, :, 0] != color_mask[:, :, 1], axis=-1)] = (0, 0, 0)
+    a = color_mask[:, :, 0] == color_mask[:, :, 1]
+    #print(a[818][700].astype(int))
+    #print('after', color_mask[818][700])
+    #print(np.multiply(color_mask, a.astype(int))[818][700])
+    return np.multiply(color_mask[:, :, 0], a.astype(int))
+
 # simple function to obtain a binary mask from a dataset with multiple-classes masks
 def binary_mask(mask):
 
     return (mask > 0).astype('float')
 
+'''
+import cv2
+import json
 
+mask_path = "/Users/kevinmarchesini/Desktop/RAPN10_0008.png___fuse.png"
+mask = cv2.cvtColor(cv2.imread(mask_path), cv2.COLOR_BGR2RGB)
+
+with open("../config_files/class_mapping_new.json", 'r') as openfile:
+    # Reading from json file
+    class_mapping = json.load(openfile)
+class_mapping = class_mapping["instruments"]
+
+mask_converted = color2classopt(mask, class_mapping)
+
+mask_path = mask_path.replace('fuse', 'single')
+print(mask_converted.shape)
+cv2.imwrite(mask_path, cv2.cvtColor(np.float32(mask_converted), cv2.COLOR_BGR2RGB))
+'''
