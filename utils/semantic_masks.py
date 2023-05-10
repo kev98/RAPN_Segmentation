@@ -8,7 +8,7 @@ color_mapping_2 = {
 
 # Define the mapping of the classes to their respective color in RGB for the MULTICLASS_1 problem
 # (build using class_mapping.json and config.json)
-color_mapping_8 = {
+'''color_mapping_8 = {
     0: (0, 0, 0),           # Background - BLACK
     1: (209, 25, 30),       # Force Bipolar - RED
     2: (24, 200, 59),       # Fenestrated Bipolar Forceps - GREEN
@@ -17,6 +17,17 @@ color_mapping_8 = {
     5: (130, 1, 152),       # Suction - PURPLE
     6: (159, 89, 106),      # Large Needle Driver -
     7: (92, 154, 27),        # Echography - DARK GREEN
+}'''
+
+color_mapping_8 = {
+    0: (0, 0, 0),           # Background - BLACK
+    1: (30, 25, 209),       # Force Bipolar - RED
+    2: (59, 200, 24),       # Fenestrated Bipolar Forceps - GREEN
+    3: (138, 14, 242),      # Prograsp Forceps - MAGENTA
+    4: (112, 62, 66),       # Monopolar Curved Scissors - DARK PURPLE
+    5: (152, 1, 130),       # Suction - PURPLE
+    6: (106, 89, 159),      # Large Needle Driver -
+    7: (27, 154, 92),        # Echography - DARK GREEN
 }
 
 color_mapping_9 = {
@@ -168,7 +179,7 @@ color_mapping_32 = {
 # Define the mapping of the classes to their respective color in RGB for the MULTICLASS problem (all classes)
 # with the Hemostasis class and w/o Prograsp (merged to Cadiere)
 # (build using class_mapping.json and config.json)
-color_mapping_20 = {
+'''color_mapping_20 = {
     0: (0, 0, 0),           # Background - BLACK
     1: (66, 62, 112),       # Monopolar Curved Scissors - DARK PURPLE
     2: (209, 25, 30),       # Force Bipolar - RED
@@ -189,12 +200,12 @@ color_mapping_20 = {
     17: (140, 222, 14),     # Hemolock Clip Applier -
     18: (41, 38, 64),       # Laparoscopic Needle Driver -
     19: (255, 255, 255),    # Other instruments -
-}
+}'''
 
 # Define the mapping of the classes to their respective color in RGB for the MULTICLASS problem (all classes)
 # with the Hemostasis class and w/o Prograsp (merged to Cadiere), and with 'Laparoscopic Instruments' class
 # (build using class_mapping.json and config.json)
-color_mapping_19 = {
+'''color_mapping_19 = {
     0: (0, 0, 0),           # Background - BLACK
     1: (66, 62, 112),       # Monopolar Curved Scissors - DARK PURPLE
     2: (209, 25, 30),       # Force Bipolar - RED
@@ -213,6 +224,28 @@ color_mapping_19 = {
     15: (179, 254, 6),      # Laparoscopic Instruments -
     16: (6, 134, 50),       # Endobag -
     17: (140, 222, 14),     # Hemolock Clip Applier -
+    18: (255, 255, 255),    # Other instruments -
+}'''
+
+color_mapping_19 = {
+    0: (0, 0, 0),           # Background - BLACK
+    1: (112, 62, 66),       # Monopolar Curved Scissors - DARK PURPLE
+    2: (30, 25, 209),       # Force Bipolar - RED
+    3: (106, 89, 159),      # Large Needle Driver -
+    4: (152, 1, 130),       # Suction - PURPLE
+    5: (233, 135, 104),     # Suture wire -
+    6: (25, 82, 176),       # Hemolock Clip -
+    7: (59, 200, 24),       # Fenestrated Bipolar Forceps - GREEN
+    8: (240, 59, 15),       # Suture needle -
+    9: (131, 8, 132),       # Vessel Loop -
+    10: (244, 240, 91),     # Cadiere Forceps -
+    11: (0, 0, 255),        # Hemostasis-
+    12: (206, 93, 189),     # Bulldog clamp -
+    13: (246, 243, 6),      # Da Vinci trocar -
+    14: (27, 154, 92),      # Echography - DARK GREEN
+    15: (6, 254, 179),      # Laparoscopic Instruments -
+    16: (50, 134, 6),       # Endobag -
+    17: (14, 222, 140),     # Hemolock Clip Applier -
     18: (255, 255, 255),    # Other instruments -
 }
 

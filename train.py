@@ -34,7 +34,7 @@ SAVE_CRITERION = config['save']
 ACTIVATION = config['activation']
 PLATFORM = config['platform']
 PROFILE = config['profile']
-LEARNING_RATE = 5e-4
+LEARNING_RATE = 2.45e-4
 PATIENCE = 15
 
 # Definition of the segmentation classes based on the model you want to train
@@ -75,15 +75,16 @@ PATIENCE = 15
 #           'Laparoscopic Clip Applier', 'Drain', 'Foam', 'Metal clip', 'Surgical_Glove_Tip', 'Foam extruder',
 #           'Laparoscopic Scissors', 'Assistant trocar']
 # First experiment of merging (20 classes)
-classes = ['Tissue', 'Monopolar Curved Scissors', 'Force Bipolar', 'Large Needle Driver', 'Suction',
-           'Suture wire', 'Hemolock Clip', 'Fenestrated Bipolar Forceps', 'Suture needle',
-           'Vessel Loop', 'Cadiere Forceps', 'Hemostasis', 'Bulldog clamp', 'Da Vinci trocar', 'Echography',
-           'Laparoscopic Fenestrated Forceps', 'Endobag', 'Hemolock Clip Applier', 'Laparoscopic Needle Driver']
-# Second experiment of merging (19 classses)
 #classes = ['Tissue', 'Monopolar Curved Scissors', 'Force Bipolar', 'Large Needle Driver', 'Suction',
 #           'Suture wire', 'Hemolock Clip', 'Fenestrated Bipolar Forceps', 'Suture needle',
 #           'Vessel Loop', 'Cadiere Forceps', 'Hemostasis', 'Bulldog clamp', 'Da Vinci trocar', 'Echography',
-#           'Laparoscopic Fenestrated Forceps', 'Endobag', 'Hemolock Clip Applier', 'Other instruments']
+#           'Laparoscopic Fenestrated Forceps', 'Endobag', 'Hemolock Clip Applier', 'Laparoscopic Needle Driver',
+#           'Other instruments']
+# Second experiment of merging (19 classses)
+classes = ['Tissue', 'Monopolar Curved Scissors', 'Force Bipolar', 'Large Needle Driver', 'Suction',
+           'Suture wire', 'Hemolock Clip', 'Fenestrated Bipolar Forceps', 'Suture needle',
+           'Vessel Loop', 'Cadiere Forceps', 'Hemostasis', 'Bulldog clamp', 'Da Vinci trocar', 'Echography',
+           'Laparoscopic Fenestrated Forceps', 'Endobag', 'Hemolock Clip Applier', 'Other instruments']
 
 #Choose the encoder and the segmentation model
 ENCODER = config['encoder']  # encoder
@@ -97,7 +98,7 @@ MODEL_NAME = config['model']  # segmentation model
 if PLATFORM == "server":
     DATA_DIR = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN_tris"
     out_dir = r"/home/kmarc/workspace/nas_private/RAPN_results_final/base_model/multiclass_all" + \
-              f"/{MODEL_NAME}{ENCODER}_bs{BATCH_SIZE}_lr{LEARNING_RATE}_{LOSS}_merge20"
+              f"/{MODEL_NAME}{ENCODER}_bs{BATCH_SIZE}_lr{LEARNING_RATE}_{LOSS}_merge19_final"
     train_dir = os.path.join(DATA_DIR, 'train')
     valid_dir = os.path.join(DATA_DIR, 'val')
     test_dir = os.path.join(DATA_DIR, 'test')
@@ -150,6 +151,8 @@ def main():
 
     # Load an existing model
     #model.load_state_dict(torch.load("/home/kmarc/workspace/nas_private/RAPN_results/base_model/Francesco_model/tu-efficientnetv2_rw_s-FPN_14cl.pth"))
+    #model.load_state_dict(torch.load("/home/kmarc/workspace/nas_private/RAPN_results_final/base_model/multiclass_all/DeepLabV3+tu-efficientnet_b4_bs8_lr0.0005_focaldice_merge19_final/tu-efficientnet_b4-DeepLabV3+-30ce.pth"))
+    #model.load_state_dict(torch.load("/home/kmarc/workspace/nas_private/RAPN_results_final/base_model/multiclass_1/DeepLabV3+tu-efficientnet_b4_bs8_lr0.0003_focaldice/tu-efficientnet_b4-DeepLabV3+-30ce.pth"))
 
     model.to(DEVICE)
 
