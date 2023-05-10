@@ -15,6 +15,10 @@ import cv2
 import glob
 from alive_progress import alive_bar
 import json
+import sys
+current = os.path.dirname(os.path.realpath(__file__))
+parent = os.path.dirname(current)
+sys.path.append(parent)
 from utils.semantic_masks import color2class
 
 
@@ -38,8 +42,8 @@ def create_dataset_tree(source, dest):
 def main():
 
     # Specify the input folder and the output folder
-    source_folder = r"/home/kmarc/workspace/nas_private/RAPN100"
-    dest_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN"
+    source_folder = r"/home/kmarc/workspace/nas_private/RAPN100_final"
+    dest_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN_final"
     create_dataset_tree(source_folder, dest_folder)
 
     # create a color mapping reading the JSON file
@@ -69,8 +73,11 @@ def main():
     masks.sort()
 
     with alive_bar(len(images)) as bar:
+        i = 0
         for im_path, mask_path in zip(images, masks):
             # open the image and the mask and retrieve the size
+            i = i+1
+            print(i)
             im = cv2.cvtColor(cv2.imread(im_path), cv2.COLOR_BGR2RGB)
             mask = cv2.cvtColor(cv2.imread(mask_path), cv2.COLOR_BGR2RGB)
             procedure = im_path.split('/')[-2]
