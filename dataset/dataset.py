@@ -78,10 +78,11 @@ class RAPN_Dataset(BaseDataset):
 
     # Function to set the way in which the classes has to be merged "online"
     def merge_classes(self, mask):
-        mask[mask == 2] = 31 # conversion of the Bulldog wire in Suture wire
-        mask[mask == 8] = 31 # conversion of the Endobag wire in Suture wire
-        mask[mask == 25] = 3 # conversion of Prograsp Forceps in Cadiere Forceps
-        mask[mask == 16] = 13 # conversion of Laparoscopic Clip Applier in Hemolock CLip Applier
+        #mask[mask == 2] = 31 # conversion of the Bulldog wire in Suture wire
+        #mask[mask == 8] = 31 # conversion of the Endobag wire in Suture wire
+        #mask[mask == 25] = 3 # conversion of Prograsp Forceps in Cadiere Forceps
+        #mask[mask == 16] = 13 # conversion of Laparoscopic Clip Applier in Hemolock CLip Applier
+
         #mask[mask == 16] = 17 # conversion of Laparoscopic CLip Applier in Laparoscopic Fenestrated Forceps (a.k.a. "Laparoscopic Instruments")
         #mask[mask == 18] = 17 # conversion of Laparoscopic Needle Driver in Laparoscopic Fenestrated Forceps (a.k.a. "Laparoscopic Instruments")
         #mask[mask == 19] = 17 # conversion of Laparoscopic Scissors in Laparoscopic Fenestrated Forceps (a.k.a. "Laparoscopic Instruments")
