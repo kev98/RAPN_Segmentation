@@ -10,13 +10,15 @@ import os
 
 def main():
     # Specify the dataset folder
-    source_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN_tris"
+    #source_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN_tris"
+    source_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN_final_2"
     #source_folder = "/Volumes/ORSI/Kevin/Dataset_RAPN_20procedures/train/masks"
     #source_folder = "/Volumes/ORSI/Kevin/Dataset_RAPN_20procedures"
 
-    dir_list_ = os.listdir(os.path.join(source_folder, 'train', 'masks')) + \
+    '''dir_list_ = os.listdir(os.path.join(source_folder, 'train', 'masks')) + \
                os.listdir(os.path.join(source_folder, 'val', 'masks')) + \
-               os.listdir(os.path.join(source_folder, 'test', 'masks'))
+               os.listdir(os.path.join(source_folder, 'test', 'masks'))'''
+    dir_list_ = os.listdir(os.path.join(source_folder, 'masks'))
     dir_list = [x for x in dir_list_ if (not x.endswith('xlsx')) and (not x.startswith('._'))]
     print('dir list: ', dir_list)
 
@@ -24,7 +26,7 @@ def main():
     #masks.sort()
 
     tot_count = []
-    num_classes = 42  # number of classes (can change)
+    num_classes = 36  # number of classes (can change)
 
     with alive_bar(len(dir_list)) as bar:
         for dir in dir_list:
