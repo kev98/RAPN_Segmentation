@@ -30,8 +30,10 @@ def main():
 
     with alive_bar(len(dir_list)) as bar:
         for dir in dir_list:
+            print(dir)
             count_classes = [0 for i in range(0, num_classes)]
-            masks = glob.glob(os.path.join(source_folder,'*', 'masks', dir) + '/*.png')
+            #masks = glob.glob(os.path.join(source_folder,'*', 'masks', dir) + '/*.png')
+            masks = glob.glob(os.path.join(source_folder, 'masks', dir) + '/*.png')
             masks.sort()
             for mask_path in masks:
                 # open the mask and retrieve the size
@@ -71,7 +73,18 @@ def main():
      'Prograsp Forceps', 'Right PBP Needle Driver', 'Scissors', 'Suction', 'Surgical_Glove_Tip', 'Suture needle',
      'Suture wire', 'null', 'Vessel Loop', 'Vessel Sealer Extend', 'Echography', 'Da Vinci trocar',
      'Assistant trocar', 'Airseal trocar', 'Foam extruder', 'Foam', 'null']
-
+    
+    classes_list = ['Background', 'Bulldog clamp', 'Bulldog wire', 'Cadiere Forceps', 'Da Vinci Obturator',
+                    'Drain', 'Endobag', 'Endobag specimen retriever', 'Endobag wire', 'Fenestrated Bipolar Forceps',
+                    'Endoscope Trocar',
+                    'Force Bipolar', 'Hemostasis', 'Hemolock Clip Applier', 'Hemolock Clip', 'Floseal_Extruder',
+                    'Laparoscopic Clip Applier',
+                    'Laparoscopic Fenestrated Forceps', 'Laparoscopic Needle Driver', 'Laparoscopic Scissors',
+                    'Large Needle Driver',
+                    'Tachoseal_introducer', 'Maryland Bipolar Forceps', 'Metal clip', 'Monopolar Curved Scissors',
+                    'Prograsp Forceps', 'Airseal trocar', 'Assistant trocar', 'Suction', 'Surgical_Glove_Tip',
+                    'Suture needle',
+                    'Suture wire', 'Echography', 'Vessel Loop', 'Vessel Sealer Extend', 'Da Vinci trocar']
     # create a Dataframe with the occurencies of each class
     df = pd.DataFrame(tot_count, index=classes_list, columns=dir_list)
     print(df)

@@ -38,7 +38,7 @@ class DSAD_Dataset_Multiclass(BaseDataset):
         self.images.sort()
         print('number of images: ',len(self.images))
         print('number of masks: ', len(self.masks[0]))
-
+        
         self.augmentation = augmentation
         self.preprocessing = preprocessing
 
@@ -58,7 +58,6 @@ class DSAD_Dataset_Multiclass(BaseDataset):
         sum [sum < 0] = 0 # because I found that there are some images in which a pixel belongs to two classes
         #print(sum.shape)
         mask = np.concatenate((mask, sum[..., None]), axis=-1).astype('float')
-
 
         # apply augmentations
         if self.augmentation:

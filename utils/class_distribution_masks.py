@@ -9,13 +9,13 @@ import pandas as pd
 
 def main():
     # Specify the dataset folder
-    source_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN_tris"
+    #source_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN_tris"
     #source_folder = "/Volumes/ORSI/Kevin/Dataset_RAPN_20procedures/train"
-
-    masks = glob.glob(source_folder + '/*/masks/*/*.png')
+    source_folder = r"/home/kmarc/workspace/nas_private/Segmentation_Dataset_RAPN_final_2"
+    masks = glob.glob(source_folder + '/masks/*/*.png')
     masks.sort()
 
-    count_classes = [0 for i in range(0, 42)]
+    count_classes = [0 for i in range(0, 37)]
 
     with alive_bar(len(masks)) as bar:
         for mask_path in masks:
@@ -70,7 +70,7 @@ def main():
     df = pd.DataFrame(count_classes, index=classes_list, columns=['Occurencies'])
     print(df)
 
-    df.to_excel(source_folder + '/class_distribution_final.xlsx')
+    df.to_excel(source_folder + '/class_distribution_final_2.xlsx')
 
 
 if __name__ == '__main__':

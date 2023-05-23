@@ -60,8 +60,9 @@ def main():
                'RAPN76': 248,
                'RAPN60': 241}
     '''
+    '''
     dir = ['RAPN91', 'RAPN20', 'RAPN96', 'RAPN47', 'RAPN102', 'RAPN41', 'RAPN87', 'RAPN66', 'RAPN74', 'RAPN81',
-           'RAPN48', 'RAPN95', 'RAPN50', 'RAPN92', 'RAPN28', 'RAPN89', 'RAPN31', 'RAPN99', 'RAPN98', 'RAPN108']
+           'RAPN48', 'RAPN95', 'RAPN50', 'RAPN92', 'RAPN28', 'RAPN89', 'RAPN31', 'RAPN99', 'RAPN98', 'RAPN108', 'RAPN7']
     len_dir = {'RAPN91': 447,
                'RAPN20': 698,
                'RAPN96': 231,
@@ -81,19 +82,45 @@ def main():
                'RAPN31': 488,
                'RAPN99': 356,
                'RAPN98': 186,
-               'RAPN108': 152}
-
+               'RAPN108': 152,
+               'RAPN7': 485}
+    '''
+    dir = ['RAPN20', 'RAPN96', 'RAPN102', 'RAPN87', 'RAPN81', 'RAPN95', 'RAPN92', 'RAPN28', 'RAPN89', 'RAPN31', 'RAPN99',
+           'RAPN98', 'RAPN108', 'RAPN19', 'RAPN45', 'RAPN30', 'RAPN16', 'RAPN79', 'RAPN80', 'RAPN109', 'RAPN115']
+    len_dir = {'RAPN20': 698,
+               'RAPN96': 231,
+               'RAPN102': 304,
+               'RAPN87': 248,
+               'RAPN81': 331,
+               'RAPN95': 366,
+               'RAPN92': 336,
+               'RAPN28': 227,
+               'RAPN89': 379,
+               'RAPN31': 488,
+               'RAPN99': 356,
+               'RAPN98': 186,
+               'RAPN108': 152,
+               'RAPN19': 464,
+               'RAPN45': 173,
+               'RAPN30': 364,
+               'RAPN16': 553,
+               'RAPN79': 259,
+               'RAPN80': 336,
+               'RAPN109': 466,
+               'RAPN115': 432}
+    
     # Compute the all the combinations of the 20 procedure listed in "dir", composed by 10, 11, 12, 13, 14 and 15
     # procedures among that 20
-    '''comb10 = list(combinations(dir, 10))
-    comb11 = list(combinations(dir, 11))
+    
     comb12 = list(combinations(dir, 12))
     comb13 = list(combinations(dir, 13))
     comb14 = list(combinations(dir, 14))
     comb15 = list(combinations(dir, 15))
+    comb16 = list(combinations(dir, 16))
+    comb17 = list(combinations(dir, 17))
 
-    print(len(comb10), len(comb11), len(comb12), len(comb13), len(comb14), len(comb15))'''
-
+    print(len(comb12), len(comb13), len(comb14), len(comb15), len(comb16), len(comb17))
+    '''
     comb7 = list(combinations(dir, 7))
     comb8 = list(combinations(dir, 8))
     comb9 = list(combinations(dir, 9))
@@ -102,7 +129,7 @@ def main():
     comb12 = list(combinations(dir, 12))
 
     print(len(comb7), len(comb8), len(comb9), len(comb10), len(comb11), len(comb12))
-
+    '''
     #masks.sort()
 
     # class distribution among the RAPN100 Dataset images, previously computed
@@ -149,6 +176,9 @@ def main():
                     'Prograsp Forceps', 'Suction',
                     'Suture needle',
                     'Suture wire', 'Vessel Loop', 'Echography']
+    compulsory_list = ['Fenestrated Bipolar Forceps',
+                    'Cadiere Forceps']
+    #compulsory_list = []
     compulsory_index = []
     for i in compulsory_list:
         compulsory_index.append(classes_list.index(i))
@@ -156,7 +186,7 @@ def main():
 
     counter = []
     for d in dir:
-        count_classes = [0 for i in range(0, 37)]
+        count_classes = [0 for i in range(0, 36)]
         folder_mask = glob.glob(os.path.join(source_folder, d) + '/*.png')
         for mask_path in folder_mask:
             mask = cv2.imread(mask_path, 0)
@@ -181,13 +211,13 @@ def main():
 
     # Loop over the combination of 10 procedures, to find the one with the smaller distance from the
     # distribution of the entire dataset
-    for co in comb7:
+    for co in comb12:
         curr_len = 0
         curr_counter = []
         for d in co:
             curr_len += len_dir[d]
         # test set circa 10% quindi tra 2900 e 3500, validation circa 15% quindi tra 4460 e 5100
-        if curr_len < 2900 or curr_len > 3500:
+        if curr_len < 4460 or curr_len > 5100:
             print(co, 'length error')
             continue
         print(co, 'OK')
@@ -216,12 +246,12 @@ def main():
 
     # Loop over the combination of 11 procedures, to find the one with the smaller distance from the
     # distribution of the entire dataset
-    for co in comb8:
+    for co in comb13:
         curr_len = 0
         curr_counter = []
         for d in co:
             curr_len += len_dir[d]
-        if curr_len < 2900 or curr_len > 3500:
+        if curr_len < 4460 or curr_len > 5100:
             print(co, 'length error')
             continue
         print(co, 'OK')
@@ -250,12 +280,12 @@ def main():
 
     # Loop over the combination of 12 procedures, to find the one with the smaller distance from the
     # distribution of the entire dataset
-    for co in comb9:
+    for co in comb14:
         curr_len = 0
         curr_counter = []
         for d in co:
             curr_len += len_dir[d]
-        if curr_len < 2900 or curr_len > 3500:
+        if curr_len < 4460 or curr_len > 5100:
             print(co, 'length error')
             continue
         print(co, 'OK')
@@ -284,12 +314,12 @@ def main():
 
     # Loop over the combination of 13 procedures, to find the one with the smaller distance from the
     # distribution of the entire dataset
-    for co in comb10:
+    for co in comb15:
         curr_len = 0
         curr_counter = []
         for d in co:
             curr_len += len_dir[d]
-        if curr_len < 2900 or curr_len > 3500:
+        if curr_len < 4460 or curr_len > 5100:
             print(co, 'length error')
             continue
         print(co, 'OK')
@@ -318,12 +348,12 @@ def main():
 
     # Loop over the combination of 14 procedures, to find the one with the smaller distance from the
     # distribution of the entire dataset
-    for co in comb11:
+    for co in comb16:
         curr_len = 0
         curr_counter = []
         for d in co:
             curr_len += len_dir[d]
-        if curr_len < 2900 or curr_len > 3500:
+        if curr_len < 4460 or curr_len > 5100:
             print(co, 'length error')
             continue
         print(co, 'OK')
@@ -352,12 +382,12 @@ def main():
 
     # Loop over the combination of 15 procedures, to find the one with the smaller distance from the
     # distribution of the entire dataset
-    for co in comb12:
+    for co in comb17:
         curr_len = 0
         curr_counter = []
         for d in co:
             curr_len += len_dir[d]
-        if curr_len < 2900 or curr_len > 3500:
+        if curr_len < 4460 or curr_len > 5100:
             print(co, 'length error')
             continue
         print(co, 'OK')
