@@ -3,7 +3,7 @@ This repository contains the code I developed for my [Master's thesis](https://s
 obtain good binary and multiclass segmentation models of surgical instruments on our internal dataset.
 
 <figure>
- <img style="float: left" src="Segmentation_results.png" alt="Side view" width="80%">
+ <img style="float: center" src="Segmentation_results.png" alt="Side view" width="80%">
  <figcaption><em>Some masks predicted by the multiclass model (20 classes) using DeepLabV3+ with EfficientNet-B4.</em></figcaption>
 </figure>
 
