@@ -1,9 +1,9 @@
 # Surgical Tools and Organs Segmentation in Robot-Assisted Procedures
-This repository contains the code I developed for my [Master's thesis](https://scholar.google.com/citations?view_op=view_citation&hl=en&user=iYUVAlIAAAAJ&citation_for_view=iYUVAlIAAAAJ:UeHWp8X0CEIC) during an internship program completed at the [Orsi Academy](https://www.orsi-online.com) (Belgium). The work focuses on developing neural network models for surgical scene segmentation. The first step involved working with a team of doctors and engineers to create the largest dataset of laparoscopic images of partial nephrectomy procedures, complete with annotated masks for surgical tool segmentation (private nowadays). The project covers the numerous steps taken to create this dataset, including the statistical analyses that were carried out. Then, through in-depth analysis of benchmark datasets, the best state-of-the-art neural networks were selected and trained on the created dataset to
+This repository contains the code I developed for my [Master's thesis](https://scholar.google.com/citations?view_op=view_citation&hl=en&user=iYUVAlIAAAAJ&citation_for_view=iYUVAlIAAAAJ:UeHWp8X0CEIC) during an internship program completed at the [Orsi Academy](https://www.orsi-online.com) (Belgium). The work focuses on developing neural network models for surgical scene segmentation, speifically applied to Robot-Assisted Partial Nephrectomy (RAPN). The first step involved working with a team of doctors and engineers to create the largest dataset of laparoscopic images of partial nephrectomy procedures, complete with annotated masks for surgical tool segmentation (private nowadays). The project covers the numerous steps taken to create this dataset, including the statistical analyses that were carried out. Then, through in-depth analysis of benchmark datasets, the best state-of-the-art neural networks were selected and trained on the created dataset to
 obtain good binary and multiclass segmentation models of surgical instruments on our internal dataset.
 
 <figure>
- <img style="float: left" src="Segmentation_results.png" alt="Side view" width="100%">
+ <img style="float: left" src="Segmentation_results.png" alt="Side view" width="80%">
  <figcaption><em>Some masks predicted by the multiclass model (20 classes) using DeepLabV3+ with EfficientNet-B4.</em></figcaption>
 </figure>
 
