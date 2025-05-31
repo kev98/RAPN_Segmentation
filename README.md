@@ -7,4 +7,18 @@ obtain good binary and multiclass segmentation models of surgical instruments on
  <figcaption><em>Some masks predicted by the multiclass model (20 classes) using DeepLabV3+ with EfficientNet-B4.</em></figcaption>
 </figure>
 
-In a second step, the project also explores how temporal consistency can be leveraged for the segmentation of surgical instruments in videos. For the annotations of the videos we used a pseudolabeling technqieus
+## Dealing with Temporal Consistency
+In a second step, the project also explores how temporal consistency can be leveraged for the segmentation of surgical instruments in videos. For this purpose, we need a dataset with images sampled and annotated at a higher frame rate rather than 1 frame every 10 or 20 seconds. Thus, during the thesis, the datasets were extended to use them to train neural networks with a "temporal part". To annotate these extended datasets we explored a semi-supervised technique called pseudo-labeling.
+
+<figure>
+ <img style="float: left" src="Videos_annotation.png" alt="Side view" width="100%">
+ <figcaption><em>Visual explanation of the pseudo-labeling technique, referring to our internal dataset.</em></figcaption>
+</figure>
+
+During the project, I explored different strategies to improve the segmentation using temporal information. The final architecture consists in the baseline baseline encoder-decoder with the addition of a Normalized Self-Attention Block in the middle.
+
+<figure>
+ <img style="float: left" src="Model_architecture.png" alt="Side view" width="100%">
+ <figcaption><em>Final segmentation model architecture which takes as input a sequence of frames from a robot-assisted surgery.</em></figcaption>
+</figure>
+
