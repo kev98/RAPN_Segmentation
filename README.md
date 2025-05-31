@@ -21,8 +21,10 @@ In a second step, the project also explores how temporal consistency can be leve
 
 During the project, I explored different strategies to improve the segmentation using temporal information. The final architecture consists in the baseline baseline encoder-decoder with the addition of a Normalized Self-Attention Block in the middle.
 
-<figure>
- <img style="float: left" src="Model_architecture.png" alt="Side view" width="100%">
- <figcaption><em>Final segmentation model architecture which takes as input a sequence of frames from a robot-assisted surgery.</em></figcaption>
-</figure>
+<p align="center">
+  <img src="Model_architecture.png" alt="Side view" width="90%">
+</p>
+<p align="center">
+  <em>Final segmentation model architecture which takes as input a sequence of frames from a robot-assisted surgery.</em>
+</p>
 
